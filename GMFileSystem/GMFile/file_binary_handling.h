@@ -1,0 +1,52 @@
+#pragma once
+#include <string>
+#include <ios>
+#include <boost/filesystem.hpp>
+
+#include "file_handling.h"
+//file_bin_open
+//
+//file_bin_rewrite
+//
+//file_bin_close
+//
+//file_bin_size
+//
+//file_bin_position
+//
+//file_bin_seek
+//
+//file_bin_write_byte
+//
+//file_bin_read_byte
+
+
+int _file_bin_open(std::string filename, std::ios_base::open_mode mode);
+int _file_bin_open(boost::filesystem::path filename, std::ios_base::open_mode mode);
+
+char _file_bin_read_byte(int file);
+void _file_bin_write_byte(int file, char byte);
+unsigned short _file_bin_read_word(int file);
+void _file_bin_write_word(int file, unsigned short input);
+unsigned long _file_bin_read_dword(int file);
+void _file_bin_write_dword(int file, unsigned long input);
+
+auto _file_bin_size(int file) -> decltype(OpenFilestreams()[file]->tellg());
+auto _file_bin_position(int file) -> decltype(OpenFilestreams()[file]->tellg());
+void _file_bin_seek(int file, int offset, std::ios_base::seekdir dir = std::ios_base::beg);
+
+
+GMEXPORT double file_bin_open(const char* filename, double mode);
+
+GMEXPORT double file_bin_read_byte(double file);
+GMEXPORT double  file_bin_write_byte(double file, double byte);
+GMEXPORT double file_bin_read_word(double file);
+GMEXPORT double  file_bin_write_word(double file, double byte);
+GMEXPORT double file_bin_read_dword(double file);
+GMEXPORT double  file_bin_write_dword(double file, double byte);
+
+
+GMEXPORT double file_bin_size(double file);
+GMEXPORT double file_bin_position(double file);
+GMEXPORT double file_bin_seek(double file, double position);
+GMEXPORT double file_bin_seek_relative(double file, double offset, double relative);

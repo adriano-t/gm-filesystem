@@ -34,6 +34,8 @@ bool _file_eoln(int file);
 bool _file_good(int file);
 bool _file_fail(int file);
 bool _file_bad(int file);
+void _file_set_fail(int file, bool fail);
+void _file_set_bad(int file, bool bad);
 void _file_write_flush(int file);
 void _file_close(int file);
 
@@ -56,5 +58,7 @@ GMEXPORT double file_eoln(double file);
 GMEXPORT double file_good(double file);
 GMEXPORT double file_fail(double file);
 GMEXPORT double file_bad(double file);
+GMEXPORT double file_set_fail(double file, double fail);
+GMEXPORT double file_set_bad(double file, double fail);
 GMEXPORT double file_write_flush(double file);
 GMEXPORT double file_close(double file);

@@ -157,7 +157,20 @@ bool _file_bad(int file)
 	}
 	return false;
 }
-
+void _file_set_fail(int file, bool fail)
+{
+	if (isValidIndex(file)) {
+		auto flags(OpenFilestreams()[file]->rdstate() & ~std::ios::failbit);
+		OpenFilestreams()[file]->clear(flags);
+	}
+}
+void _file_set_bad(int file, bool bad)
+{
+	if (isValidIndex(file)) {
+		auto flags(OpenFilestreams()[file]->rdstate() & ~std::ios::badbit);
+		OpenFilestreams()[file]->clear(flags);
+	}
+}
 void _file_close(int file)
 {
 	DeleteFilestream(file);
@@ -228,6 +241,17 @@ GMEXPORT double file_bad(double file)
 {
 	return _file_bad(static_cast<int>(file));
 }
+GMEXPORT double file_set_fail(double file, double fail)
+{
+	_file_set_fail(static_cast<int>(file), static_cast<bool>(fail));
+	return 0;
+}
+GMEXPORT double file_set_bad(double file, double bad)
+{
+	_file_set_bad(static_cast<int>(file), static_cast<bool>(bad));
+	return 0;
+}
+GMEXPORT double file_set_bad(double file, double fail);
 GMEXPORT double file_write_flush(double file)
 {
 	_file_write_flush(static_cast<int>(file));

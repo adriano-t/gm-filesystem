@@ -9,8 +9,7 @@
 
 
 
-
-#if 1
+#ifdef _WINDLL
 BOOL WINAPI DllMain(
   HANDLE hinstDLL, 
   DWORD dwReason, 

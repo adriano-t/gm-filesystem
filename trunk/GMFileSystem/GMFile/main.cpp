@@ -13,7 +13,7 @@
 
 //std::FILE
 
-#if 1
+#ifdef _WINDLL
 BOOL WINAPI DllMain(
   HANDLE hinstDLL, 
   DWORD dwReason, 
@@ -35,22 +35,22 @@ BOOL WINAPI DllMain(
 #else
 int main() {
 
+	std::cout << ::directory_exists("c:\\windddows") << std::endl;
+
+	//int i(0);
+	//std::string s(::file_find_first("%localappdata%\\fs_test\\*test*", GMdirectory));
+	//while (s != "") {
+	//	std::cout <<i++ << " " << s << std::endl;
+	//	s = file_find_next();
+	//}
+	//file_find_close();
 
 
-	int i(0);
-	std::string s(::file_find_first("%localappdata%\\fs_test\\*test*", GMdirectory));
-	while (s != "") {
-		std::cout <<i++ << " " << s << std::endl;
-		s = file_find_next();
-	}
-	file_find_close();
+	////std::cout << (::_get_attributes("%localappdata%\\fs_test\\fsystest") & GMdirectory)<< std::endl;
 
+	//
 
-	//std::cout << (::_get_attributes("%localappdata%\\fs_test\\fsystest") & GMdirectory)<< std::endl;
-
-	
-
-	system("PAUSE");
+	//system("PAUSE");
 	return 0;
 }
 #endif

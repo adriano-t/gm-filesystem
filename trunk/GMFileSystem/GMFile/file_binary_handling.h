@@ -4,22 +4,6 @@
 #include <boost/filesystem.hpp>
 
 #include "file_handling.h"
-//file_bin_open
-//
-//file_bin_rewrite
-//
-//file_bin_close
-//
-//file_bin_size
-//
-//file_bin_position
-//
-//file_bin_seek
-//
-//file_bin_write_byte
-//
-//file_bin_read_byte
-
 
 int _file_bin_open(std::string filename, std::ios_base::open_mode mode);
 int _file_bin_open(boost::filesystem::path filename, std::ios_base::open_mode mode);

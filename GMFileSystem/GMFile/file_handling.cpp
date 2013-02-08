@@ -243,12 +243,12 @@ GMEXPORT double file_bad(double file)
 }
 GMEXPORT double file_set_fail(double file, double fail)
 {
-	_file_set_fail(static_cast<int>(file), static_cast<bool>(fail));
+	_file_set_fail(static_cast<int>(file), fail != 0);
 	return 0;
 }
 GMEXPORT double file_set_bad(double file, double bad)
 {
-	_file_set_bad(static_cast<int>(file), static_cast<bool>(bad));
+	_file_set_bad(static_cast<int>(file), bad != 0);
 	return 0;
 }
 GMEXPORT double file_set_bad(double file, double fail);

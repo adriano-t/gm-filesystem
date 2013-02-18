@@ -123,12 +123,15 @@ void _file_find_close()
 
 #endif
 
-
-
+GMEXPORT double file_exists(const char* dirname)
+{
+	boost::filesystem::path p(MakeRichPath(dirname));
+	return boost::filesystem::exists(p) && ((_get_attributes(p) & ::GMdirectory) == 0);
+}
 GMEXPORT double directory_exists(const char* dirname)
 {
 	boost::filesystem::path p(MakeRichPath(dirname));
-	return boost::filesystem::exists(p);
+	return boost::filesystem::exists(p) && ((_get_attributes(p) & ::GMdirectory) == ::GMdirectory);
 }
 GMEXPORT double directory_create(const char* dirname)
 {

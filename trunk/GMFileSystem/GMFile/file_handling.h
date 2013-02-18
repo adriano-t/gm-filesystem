@@ -14,19 +14,28 @@ int InsertFileStreamToVector(std::unique_ptr<std::fstream>&& file);
 void DeleteFilestream(int ind);
 inline bool isValidIndex(int index);
 
-int _file_text_open_read(std::string filename);
+
+bool _setLocale(const std::string& localestr);
+
+
+
+int _file_text_open_read(const std::string& filename);
 int _file_text_open_read(boost::filesystem::path filename);
 std::string _file_text_read_string(int file);
+double _file_text_read_real(int file);
+char* _file_text_read_char(int file, int number);
+void _file_text_unread(int file);
 void _file_text_readln(int file);
 
 
 
 
-int _file_text_open_append(std::string filename);
+int _file_text_open_append(const std::string& filename);
 int _file_text_open_append(boost::filesystem::path filename);
-int _file_text_open_write(std::string filename);
+int _file_text_open_write(const std::string& filename);
 int _file_text_open_write(boost::filesystem::path filename);
-void _file_text_write_string(int file, std::string input);
+void _file_text_write_string(int file, const std::string& input);
+void _file_text_write_real(int file, double input);
 void _file_text_writeln(int file);
 
 bool _file_eof(int file);
@@ -41,15 +50,20 @@ void _file_close(int file);
 
 
 GMEXPORT double max_open();
+GMEXPORT double set_locale(const char* locale);
 
 GMEXPORT double file_text_open_read(const char* filename);
 GMEXPORT const char* file_text_read_string(double file);
+GMEXPORT const char* file_text_read_char(double file, double num);
+GMEXPORT double file_text_unread(double file);
+GMEXPORT double file_text_read_real(double file);
 GMEXPORT double file_text_readln(double file);
 
 
 GMEXPORT double file_text_open_append(const char* filename);
 GMEXPORT double file_text_open_write(const char* filename);
 GMEXPORT double file_text_write_string(double file, const char* input);
+GMEXPORT double file_text_write_real(double file, double input);
 GMEXPORT double file_text_writeln(double file);
 
 

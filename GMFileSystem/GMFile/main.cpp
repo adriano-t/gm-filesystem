@@ -1,5 +1,10 @@
 #include <iostream>
+#include <locale>
+
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/locale.hpp>
+
 
 #include <windows.h>
 //#include <stack>
@@ -23,6 +28,7 @@ BOOL WINAPI DllMain(
 	switch (dwReason)
 	{
 	case DLL_PROCESS_ATTACH:
+		_setLocale("");
 	case DLL_THREAD_ATTACH:
 	case DLL_THREAD_DETACH:
 	case DLL_PROCESS_DETACH:
@@ -31,26 +37,31 @@ BOOL WINAPI DllMain(
 	return TRUE;
 }
 
+//9 >> 3
+//
 
 #else
-int main() {
+	int main() {
+		_setLocale("");
+		auto file = ::file_text_open_read("testfile.txt");
+		auto tmp(::file_text_read_char(file, 4));
+		std::cout << tmp << std::endl;
 
-	std::cout << ::directory_exists("c:\\windddows") << std::endl;
+		file_text_unread(file);
 
-	//int i(0);
-	//std::string s(::file_find_first("%localappdata%\\fs_test\\*test*", GMdirectory));
-	//while (s != "") {
-	//	std::cout <<i++ << " " << s << std::endl;
-	//	s = file_find_next();
-	//}
-	//file_find_close();
-
-
-	////std::cout << (::_get_attributes("%localappdata%\\fs_test\\fsystest") & GMdirectory)<< std::endl;
-
-	//
-
-	//system("PAUSE");
-	return 0;
-}
+		std::cout << file_text_read_real(file) << std::endl;
+		file_text_readln(file);
+		std::cout << file_text_read_real(file) << std::endl;
+		file_text_readln(file);
+		std::cout << file_text_read_real(file) << std::endl;
+		file_text_readln(file);
+		std::cout << file_text_read_real(file) << std::endl;
+		file_text_readln(file);
+		std::cout << file_text_read_real(file) << std::endl;
+		std::cout << file_text_read_string(file) << std::endl;
+		file_text_readln(file);
+		
+		//std::cout << boost::lexical_cast<double>("1,253") << std::endl;
+		return 0;
+	}
 #endif

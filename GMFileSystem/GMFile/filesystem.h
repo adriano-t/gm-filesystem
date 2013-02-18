@@ -20,7 +20,7 @@
 GMEXPORT double directory_exists(const char* dirname);
 GMEXPORT double directory_create(const char* dirname);
 GMEXPORT double directory_delete(const char* filename);
-//GMEXPORT double file_exists(const char* filename);
+GMEXPORT double file_exists(const char* filename);
 GMEXPORT double file_delete(const char* filename);
 GMEXPORT double file_rename(const char* filename, const char* newname);
 GMEXPORT double file_copy(const char* filename, const char* newname);

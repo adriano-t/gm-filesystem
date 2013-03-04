@@ -216,60 +216,60 @@ double _ini_section_delete(ini_data& ini, const char* section)
 
 
 
-double ini_open(const char* filename)
+GMEXPORT double ini_open(const char* filename)
 {
 	std::string path(MakeRichPath(filename));
 	ini_file.reset(new ini_data(path));
 	return 0;
 }
-double ini_close()
+GMEXPORT double ini_close()
 {
 	ini_file.reset(nullptr);
 	return 0;
 }
-const char* ini_read_string(const char* section, const char* key, const char* def)
+GMEXPORT const char* ini_read_string(const char* section, const char* key, const char* def)
 {
 	if (ini_file)
 		return _ini_read_string(*ini_file, section, key, def);
 	return "";
 }
-double ini_read_real(const char* section, const char* key, double def)
+GMEXPORT double ini_read_real(const char* section, const char* key, double def)
 {
 	if (ini_file)
 		return _ini_read_real(*ini_file, section, key, def);
 	return 0;
 }
-double ini_write_string(const char* section, const char* key, const char* value)
+GMEXPORT double ini_write_string(const char* section, const char* key, const char* value)
 {
 	if (ini_file)
 		return _ini_write_string(*ini_file, section, key, value);
 	return 0;
 }
-double ini_write_real(const char* section, const char* key, double value)
+GMEXPORT double ini_write_real(const char* section, const char* key, double value)
 {
 	if (ini_file)
 		return _ini_write_real(*ini_file, section, key, value);
 	return 0;
 }
-double ini_key_exists(const char* section, const char* key)
+GMEXPORT double ini_key_exists(const char* section, const char* key)
 {
 	if (ini_file)
 		return _ini_key_exists(*ini_file, section, key);
 	return 0;
 }
-double ini_key_delete(const char* section, const char* key)
+GMEXPORT double ini_key_delete(const char* section, const char* key)
 {
 	if (ini_file)
 		return _ini_key_delete(*ini_file, section, key);
 	return 0;
 }
-double ini_section_exists(const char* section)
+GMEXPORT double ini_section_exists(const char* section)
 {
 	if (ini_file)
 		return _ini_section_exists(*ini_file, section);
 	return 0;
 }
-double ini_section_delete(const char* section)
+GMEXPORT double ini_section_delete(const char* section)
 {
 	if (ini_file)
 		return _ini_section_delete(*ini_file, section);

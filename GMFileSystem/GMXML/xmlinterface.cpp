@@ -48,16 +48,25 @@ void* double_to_pointer(double v)
 }
 xml_data::pNode double_to_node(double v)
 {
+	if (v == 0) {
+		throw xml_error("Bad node pointer");
+	}
 	void* p(double_to_pointer(v));
 	return static_cast<xml_data::pNode>(p);
 }
 xml_data::pElem double_to_elem(double v)
 {
+	if (v == 0) {
+		throw xml_error("Bad element pointer");
+	}
 	void* p(double_to_pointer(v));
 	return static_cast<xml_data::pElem>(p);
 }
 xml_data::pAttr double_to_attr(double v)
 {
+	if (v == 0) {
+		throw xml_error("Bad attribute pointer");
+	}
 	void* p(double_to_pointer(v));
 	return static_cast<xml_data::pAttr>(p);
 }
@@ -141,6 +150,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		xml_data::DeleteXMLData(static_cast<int>(xml));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	}
 	return 0;
 }
@@ -149,6 +163,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return static_cast<double>(double_to_xml(xml)->getNodeType(double_to_node(node)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return -1;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -165,6 +184,11 @@ double xml_same_node(double node_left, double node_right)
 		double_to_xml(xml)->getNodeType(double_to_node(node));
 		return 0;
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return -1;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -180,6 +204,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return static_cast<double>(double_to_xml(xml)->NumChildElems(double_to_node(parent_node)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return -1;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -195,6 +224,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return static_cast<double>(double_to_xml(xml)->NumChildNodes(double_to_node(parent_node)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return -1;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -211,6 +245,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return node_to_double(double_to_xml(xml)->firstChild(double_to_node(parent_node)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -226,6 +265,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return node_to_double(double_to_xml(xml)->lastChild(double_to_node(parent_node)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -241,6 +285,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return node_to_double(double_to_xml(xml)->nextChild(double_to_node(node)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -256,6 +305,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return node_to_double(double_to_xml(xml)->prevChild(double_to_node(node)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -271,6 +325,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return elem_to_double(double_to_xml(xml)->topNode());
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -286,6 +345,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return elem_to_double(double_to_xml(xml)->firstChildElem(double_to_node(parent_node)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -301,6 +365,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return elem_to_double(double_to_xml(xml)->lastChildElem(double_to_node(parent_node)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -316,6 +385,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return elem_to_double(double_to_xml(xml)->nextChildElem(double_to_elem(elem)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -331,6 +405,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return elem_to_double(double_to_xml(xml)->prevChildElem(double_to_elem(elem)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -346,6 +425,11 @@ double xml_same_node(double node_left, double node_right)
 	try {
 		return elem_to_double(double_to_xml(xml)->firstNamedChildElem(double_to_node(parent_node), name));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -365,8 +449,15 @@ double xml_find_elem(double xml, const char* path)
 		std::string p(path);
 		tokenizer tok(p, sep);
 		auto t(_xml_find_elem_under(pxml, pxml->getDoc(), tok.begin(), tok.end()));
-		return elem_to_double(t->ToElement());
+		if (t) {
+			return elem_to_double(t->ToElement());
+		}
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -387,6 +478,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto t(_xml_find_elem_under(pxml, pelem, tok.begin(), tok.end()));
 		return elem_to_double(t->ToElement());
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -402,6 +498,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 	try {
 		return elem_to_double(double_to_xml(xml)->lastNamedChildElem(double_to_node(parent_node), name));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -417,6 +518,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 	try {
 		return elem_to_double(double_to_xml(xml)->nextNamedChildElem(double_to_elem(elem)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -432,6 +538,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 	try {
 		return elem_to_double(double_to_xml(xml)->prevNamedChildElem(double_to_elem(elem)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -448,6 +559,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 	try {
 		return elem_to_double(double_to_xml(xml)->getParentElem(double_to_node(node)));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return 0;
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -468,6 +584,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pelem(double_to_elem(elem));
 		return ReturnString(pxml->NodeName(pelem));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return "";
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -485,15 +606,19 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pelem(double_to_elem(elem));
 		return ReturnString(pxml->NodeData(pelem));
 	} catch (xml_error& err) {
-		return "";
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
 		tstr += err.what();
 		::MessageBoxA(0, tstr.c_str(), "bad node id",MB_ICONERROR);
 #endif
-		return "";
 	}
+	return "";
 }
  const char* xml_get_node_raw_data(double xml, double node)
 {
@@ -502,6 +627,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pnode(double_to_node(node));
 		return ReturnString(pxml->NodeRawValue(pnode));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 		return "";
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
@@ -520,6 +650,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		pxml->setName(pelem, name);
 		return 0;
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -537,6 +672,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		pxml->setValue(pelem, value);
 		return 0;
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -554,6 +694,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		pxml->setRawValue(pnode, data);
 		return 0;
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -570,6 +715,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pelem(double_to_elem(parent_elem));
 		return elem_to_double(pxml->pushbackChildElem(pelem, name, value));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -586,6 +736,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pelem(double_to_elem(parent_elem));
 		return elem_to_double(pxml->pushfrontChildElem(pelem, name, value));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -603,6 +758,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto panode(double_to_node(after_node));
 		return elem_to_double(pxml->pushChildElem(pelem, panode, name, value));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -621,6 +781,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		pxml->deleteNode(pparnode, pnode);
 		return 0;
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -638,6 +803,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		pxml->deleteNodes(pparnode);
 		return 0;
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -655,6 +825,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		pxml->setAttribute(pelem, name, value);
 		return 0;
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -672,6 +847,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		pxml->deleteAttribute(pelem, name);
 		return 0;
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -689,6 +869,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pnode(double_to_node(parent_node));
 		return node_to_double(pxml->pushbackChild(pnode, to_childtype(type), name));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -706,6 +891,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		return node_to_double(pxml->pushfrontChild(pnode, to_childtype(type), name));
 		return 0;
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -724,6 +914,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto panode(double_to_node(after_node));
 		return node_to_double(pxml->pushChild(pnode, panode, to_childtype(type), name));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -743,6 +938,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pelem(double_to_elem(elem));
 		return pxml->NumAttributes(pelem);
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -759,6 +959,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pelem(double_to_elem(elem));
 		return ReturnString(pxml->GetAttribute(pelem, name));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -775,6 +980,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pelem(double_to_elem(elem));
 		return attr_to_double(pxml->firstAttribute(pelem));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -791,6 +1001,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pelem(double_to_elem(elem));
 		return attr_to_double(pxml->lastAttribute(pelem));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -807,6 +1022,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pattr(double_to_attr(attribute));
 		return attr_to_double(pxml->nextAttribute(pattr));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -825,6 +1045,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pattr(double_to_attr(attribute));
 		return ReturnString(pxml->AttributeName(pattr));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -841,6 +1066,11 @@ double xml_find_elem_under(double xml, double elem, const char* path)
 		auto pattr(double_to_attr(attribute));
 		return ReturnString(pxml->AttributeValue(pattr));
 	} catch (xml_error& err) {
+#ifdef _DEBUG
+		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
+		tstr += err.what();
+		::MessageBoxA(0, tstr.c_str(), "xml error",MB_ICONERROR);
+#endif
 	} catch (std::out_of_range& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";

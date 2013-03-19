@@ -33,9 +33,9 @@ BOOL WINAPI DllMain(
 int main(int argc, char* argv[])
 {
 	double file(::xml_open("testxml.xml"));
-
+	std::cout << file << std::endl;
 	double top(::xml_root_element(file));
-	double sub(::xml_child_find_elem(file, "mymain.sub1"));
+	double sub(::xml_find_elem(file, "mymain.sub1.unexisting"));
 	std::cout << ::xml_get_elem_data(file, sub) << std::endl;
 	
 

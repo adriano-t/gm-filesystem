@@ -25,7 +25,7 @@ BOOL WINAPI DllMain(
 #else
 int main(int argc, char** argv)
 {
-	double v(::ini_open_ext("test.ini"));
+	double v(::ini_open_ext("/omgtesta/testaaa.ini"));
 	std::cout << ini_read_string_ext(v, "player", "name", "noname") << std::endl;
 	std::cout << ini_read_real_ext(v, "achievements", "1", 10) << std::endl;
 

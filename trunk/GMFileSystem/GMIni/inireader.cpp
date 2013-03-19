@@ -77,7 +77,8 @@ ini_data::~ini_data()
 void ini_data::load_ini()
 {
 	try {
-	boost::property_tree::read_ini(filename, *data);
+		boost::property_tree::read_ini(filename, *data);
+		constructed = true;
 	} catch (boost::property_tree::ini_parser_error& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
@@ -85,7 +86,7 @@ void ini_data::load_ini()
 		::MessageBoxA(0, tstr.c_str(), "ini loading fail",MB_ICONERROR);
 #endif
 	}
-	constructed = true;
+	
 }
 void ini_data::save_ini()
 {

@@ -45,6 +45,10 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>COPY "$(TargetPath)" "C:\Users\user\Documents\filesystem\fs_test.gmx\extensions\GMFileSystem\$(TargetFileName)"</Command>
+      <Message>Copying to "C:\Users\user\Documents\filesystem\fs_test.gmx\extensions\GMFileSystem\$(TargetFileName)"</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

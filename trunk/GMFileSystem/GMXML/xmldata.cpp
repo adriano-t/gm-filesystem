@@ -204,7 +204,6 @@ xml_data::pElem xml_data::getParentElem(cpNode node)
 	return const_cast<pElem>( static_cast<const xml_data &>( *this ).getParentElem(node) );
 }
 
-//cpElem
 
 std::string xml_data::NodeName(cpElem node) const
 {

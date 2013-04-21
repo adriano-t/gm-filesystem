@@ -1,6 +1,7 @@
 
 #include <string>
 #include <memory>
+#include <fstream>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
@@ -76,6 +77,13 @@ ini_data::~ini_data()
 
 void ini_data::load_ini()
 {
+	{
+		std::fstream fs(filename);
+		if (!fs.is_open()) {
+			fs.open(filename, std::ios_base::out);
+		}
+		fs.close();
+	}
 	try {
 		boost::property_tree::read_ini(filename, *data);
 		constructed = true;
@@ -95,8 +103,24 @@ void ini_data::save_ini()
 
 ini_data::ini_tree::path_type ini_data::GetPath(const std::string& section, const std::string& key)
 {
-	return ini_tree::path_type(section + "." + key);
+	ini_tree::path_type p(section, '=');
+	p /= ini_tree::path_type(key, '=');
+	return p;
 }
+
+void DisplayAllNodes(const ini_data::ini_tree& t, std::string prefix = "")
+{
+	//decltype(*t.begin()) v;
+
+	std::for_each(t.begin(), t.end(), [&] (decltype(*t.begin()) v) {
+		std::cout << prefix << v.first <<std::endl;
+		if (v.second.size() > 0 ) {
+			DisplayAllNodes(v.second, prefix + "---");
+		}
+	});
+}
+
+
 
 std::string ini_data::read_string(const std::string& section, const std::string& key, const std::string& def) const
 {

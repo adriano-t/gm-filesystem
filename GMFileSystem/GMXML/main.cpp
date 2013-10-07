@@ -7,7 +7,7 @@
 #include "xmlinterface.h"
 #include "xmldata.h"
 
-#include <yaml-cpp\yaml.h>
+//#include <yaml-cpp\yaml.h>
 #include <fstream>
 
 

@@ -24,6 +24,9 @@
     <ClCompile Include="..\GMFile\standard_functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="allresources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="autoconfig.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\GMFile\standard_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="allresources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

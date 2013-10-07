@@ -15,22 +15,31 @@ Global
 		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Executable|Win32 = Debug Executable|Win32
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D33147E-C3EC-43F1-ACC8-DE52E4DEEBAB}.Debug Executable|Win32.ActiveCfg = Debug Executable|Win32
+		{9D33147E-C3EC-43F1-ACC8-DE52E4DEEBAB}.Debug Executable|Win32.Build.0 = Debug Executable|Win32
 		{9D33147E-C3EC-43F1-ACC8-DE52E4DEEBAB}.Debug|Win32.ActiveCfg = Debug|Win32
 		{9D33147E-C3EC-43F1-ACC8-DE52E4DEEBAB}.Debug|Win32.Build.0 = Debug|Win32
 		{9D33147E-C3EC-43F1-ACC8-DE52E4DEEBAB}.Release|Win32.ActiveCfg = Release|Win32
 		{9D33147E-C3EC-43F1-ACC8-DE52E4DEEBAB}.Release|Win32.Build.0 = Release|Win32
+		{8013501B-821B-4506-AA6E-FEEE4BA0F0DE}.Debug Executable|Win32.ActiveCfg = Debug Executable|Win32
+		{8013501B-821B-4506-AA6E-FEEE4BA0F0DE}.Debug Executable|Win32.Build.0 = Debug Executable|Win32
 		{8013501B-821B-4506-AA6E-FEEE4BA0F0DE}.Debug|Win32.ActiveCfg = Debug|Win32
 		{8013501B-821B-4506-AA6E-FEEE4BA0F0DE}.Debug|Win32.Build.0 = Debug|Win32
 		{8013501B-821B-4506-AA6E-FEEE4BA0F0DE}.Release|Win32.ActiveCfg = Release|Win32
 		{8013501B-821B-4506-AA6E-FEEE4BA0F0DE}.Release|Win32.Build.0 = Release|Win32
+		{5DDD2288-DE20-46E0-B6F4-6F133AB7D9FA}.Debug Executable|Win32.ActiveCfg = Debug Executable|Win32
+		{5DDD2288-DE20-46E0-B6F4-6F133AB7D9FA}.Debug Executable|Win32.Build.0 = Debug Executable|Win32
 		{5DDD2288-DE20-46E0-B6F4-6F133AB7D9FA}.Debug|Win32.ActiveCfg = Debug|Win32
 		{5DDD2288-DE20-46E0-B6F4-6F133AB7D9FA}.Debug|Win32.Build.0 = Debug|Win32
 		{5DDD2288-DE20-46E0-B6F4-6F133AB7D9FA}.Release|Win32.ActiveCfg = Release|Win32
 		{5DDD2288-DE20-46E0-B6F4-6F133AB7D9FA}.Release|Win32.Build.0 = Release|Win32
+		{67127FF3-13C9-4692-A570-5C496E66F813}.Debug Executable|Win32.ActiveCfg = Debug Executable|Win32
+		{67127FF3-13C9-4692-A570-5C496E66F813}.Debug Executable|Win32.Build.0 = Debug Executable|Win32
 		{67127FF3-13C9-4692-A570-5C496E66F813}.Debug|Win32.ActiveCfg = Debug|Win32
 		{67127FF3-13C9-4692-A570-5C496E66F813}.Debug|Win32.Build.0 = Debug|Win32
 		{67127FF3-13C9-4692-A570-5C496E66F813}.Release|Win32.ActiveCfg = Release|Win32

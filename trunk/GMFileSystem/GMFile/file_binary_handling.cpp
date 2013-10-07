@@ -17,22 +17,24 @@ int _file_bin_open(std::string filename, std::ios_base::open_mode mode)
 	int newindex(-1);
 	std::unique_ptr<std::fstream> file(new std::fstream(filename, std::ios_base::binary | mode));
 	if (!file->fail()) {
+		file->unsetf(std::ios_base::skipws);
 		newindex = InsertFileStreamToVector(std::move(file));
 	}
 	return newindex;
 }
 
-char _file_bin_read_byte(int file)
+unsigned char _file_bin_read_byte(int file)
 {
 	char ret(0);
 	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
-		OpenFilestreams()[file]->get(ret);
-		return ret;
+		ret = OpenFilestreams()[file]->get();
+		return reinterpret_cast<unsigned char&>(ret);
 	}
 	return 0;
 }
-void _file_bin_write_byte(int file, char byte) {
-	OpenFilestreams()[file]->put(byte);
+void _file_bin_write_byte(int file, unsigned char byte) {
+	char b(reinterpret_cast<char&>(byte));
+	OpenFilestreams()[file]->put(b);
 }
 unsigned short _file_bin_read_word(int file)
 {

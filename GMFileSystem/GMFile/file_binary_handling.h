@@ -8,8 +8,8 @@
 int _file_bin_open(std::string filename, std::ios_base::open_mode mode);
 int _file_bin_open(boost::filesystem::path filename, std::ios_base::open_mode mode);
 
-char _file_bin_read_byte(int file);
-void _file_bin_write_byte(int file, char byte);
+unsigned char _file_bin_read_byte(int file);
+void _file_bin_write_byte(int file, unsigned char byte);
 unsigned short _file_bin_read_word(int file);
 void _file_bin_write_word(int file, unsigned short input);
 unsigned long _file_bin_read_dword(int file);

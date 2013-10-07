@@ -7,6 +7,8 @@
 #include "xmlinterface.h"
 #include "xmldata.h"
 
+#include <yaml-cpp\yaml.h>
+#include <fstream>
 
 
 #ifdef _WINDLL
@@ -32,18 +34,11 @@ BOOL WINAPI DllMain(
 
 int main(int argc, char* argv[])
 {
-	double file(::xml_open("testxml.xml"));
-	std::cout << file << std::endl;
-	double top(::xml_root_element(file));
-	double sub(::xml_find_elem(file, "mymain.sub1.unexisting"));
-	std::cout << ::xml_get_elem_data(file, sub) << std::endl;
-	
-
-	::xml_insert_end_elem(file, top, "test", "hello world");
-	double inserted(::xml_insert_end_elem(file, sub, "test2", "deepzors"));
-	::xml_insert_end_elem(file, inserted, "test2", "deep");
-	xml_close(file);
-	//s->SetValue("thisisatest");
-
+	//::YAML::Node y(YAML::LoadFile("testyaml.txt"));
+	YAML::Node n(YAML::Load("YAML: \"test\""));
+	YAML::Emitter em;
+	em << n;	
+	std::string mystr(em.c_str());
+	std::cout << mystr << std::endl;
 }
 #endif

@@ -5,7 +5,7 @@
 
 #include "file_handling.h"
 
-int _file_bin_open(std::string filename, std::ios_base::open_mode mode);
+int _file_bin_open(const os_string_type& filename, std::ios_base::open_mode mode);
 int _file_bin_open(boost::filesystem::path filename, std::ios_base::open_mode mode);
 
 unsigned char _file_bin_read_byte(int file);

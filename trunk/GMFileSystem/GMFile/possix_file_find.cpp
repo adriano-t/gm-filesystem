@@ -1,5 +1,5 @@
 #include <string>
-#include <boost/regex.hpp>
+#include <regex>
 #include <boost/filesystem.hpp>
 
 #include "possix_file_find.h"
@@ -17,7 +17,7 @@ possix_file_find::possix_file_find(boost::filesystem::path filemask, unsigned lo
 		advance();
 	}
 }
-possix_file_find::possix_file_find(std::string filemask, unsigned long attributes)
+possix_file_find::possix_file_find(os_string_type filemask, unsigned long attributes)
 	: attr(attributes),
 	err_code()
 	
@@ -38,15 +38,15 @@ bool possix_file_find::fits_mask()
 	if (current == end_itr) {
 		return false;
 	}
-	std::string fname(current->path().filename().string());
-	return boost::regex_match(fname, mask);
+	os_string_type fname(boost_path_to_os_string(current->path().filename()));
+	return std::regex_match(fname, mask);
 }
 bool possix_file_find::fits_attributelist()
 {
 	if (current == end_itr) {
 		return false;
 	}
-	std::string testname(current->path().string());
+	os_string_type testname(boost_path_to_os_string(current->path()));
 	unsigned long attributes(get_attributes(*current));
 	bool subtest1 = (attributes & ::GMdirectory) != 0;
 	bool test1 = ((attr & ~GMdirectory) != 0 || subtest1);
@@ -60,7 +60,7 @@ boost::filesystem::path possix_file_find::getCurrent()
 	if (current != end_itr) {
 		return current->path();
 	} else {
-		return "";
+		return string_convert<os_string_type>("");
 	}
 }
 void possix_file_find::advance()
@@ -77,7 +77,7 @@ bool possix_file_find::isLast()
 }
 
 
-void possix_file_find::string_replace_all(std::string& string, const std::string& substr, const std::string& replace)
+void possix_file_find::string_replace_all(os_string_type& string, const os_string_type& substr, const os_string_type& replace)
 {
 	std::string::size_type pos(0);
 	auto count(substr.length());
@@ -89,14 +89,14 @@ void possix_file_find::string_replace_all(std::string& string, const std::string
 
 void possix_file_find::MakeRegex(const boost::filesystem::path& filename)
 {
-	MakeRegex(filename.string());
+	MakeRegex(boost_path_to_os_string(filename));
 }
-void possix_file_find::MakeRegex(std::string filename)
+void possix_file_find::MakeRegex(os_string_type filename)
 {
-	string_replace_all(filename,".","[.]");
-	string_replace_all(filename,"*",".*");
-	string_replace_all(filename,"?",".");
-	mask = boost::regex(filename);
+	string_replace_all(filename,string_convert<os_string_type>("."),string_convert<os_string_type>("[.]"));
+	string_replace_all(filename,string_convert<os_string_type>("*"),string_convert<os_string_type>(".*"));
+	string_replace_all(filename,string_convert<os_string_type>("?"),string_convert<os_string_type>("."));
+	mask = std::basic_regex<os_char_type>(filename);
 }
 unsigned long possix_file_find::get_attributes(const boost::filesystem::directory_entry& file)
 {		

@@ -15,8 +15,8 @@
 static std::string RETSTRING;
 
 unsigned long _get_attributes(const boost::filesystem::path& file);
-std::string _file_find_first(const std::string& directory, unsigned long attributes);
-std::string _file_find_next();
+os_string_type _file_find_first(const os_string_type& directory, unsigned long attributes);
+os_string_type _file_find_next();
 void _file_find_close();
 
 
@@ -33,10 +33,10 @@ inline bool fits_attributelist(unsigned long attributes)
 
 unsigned long _get_attributes(const boost::filesystem::path& file)
 {
-	return GetFileAttributes(file.string().c_str());
+	return GetFileAttributes(file.wstring().c_str());
 }
 
-std::string _file_find_first(const std::string& directory, unsigned long attributes)
+os_string_type _file_find_first(const os_string_type& directory, unsigned long attributes)
 {
 	::WIN32_FIND_DATA outputData;
 	//::HANDLE tmp_handle(::FindFirstFileEx("c:\\test.txt", ::FindExInfoBasic, &outputData, ::FindExSearchNameMatch, NULL, 0));
@@ -46,8 +46,8 @@ std::string _file_find_first(const std::string& directory, unsigned long attribu
 		win32_search_handle = tmp_handle;
 		BOOL finding(TRUE);
 		if (!fits_attributelist(outputData.dwFileAttributes)) {
-			std::string outstr(_file_find_next());
-			if (outstr == "") {
+			os_string_type outstr(_file_find_next());
+			if (outstr == L"") {
 				::_file_find_close();
 			}
 			return outstr;
@@ -55,10 +55,14 @@ std::string _file_find_first(const std::string& directory, unsigned long attribu
 			return outputData.cFileName;
 		}
 	} else {
-		return "";
+		return os_string_type();
 	}
 }
-std::string _file_find_next()
+
+
+
+
+os_string_type _file_find_next()
 {
 	::WIN32_FIND_DATA outputData;
 	BOOL finding(TRUE);
@@ -68,7 +72,7 @@ std::string _file_find_next()
 	if (finding) {
 		return outputData.cFileName;
 	} else {
-		return "";
+		return os_string_type();
 	}
 }
 void _file_find_close()
@@ -102,18 +106,20 @@ unsigned long _get_attributes(const boost::filesystem::path& file)
 
 std::unique_ptr<possix_file_find> possix_search_handle(nullptr);
 
-std::string _file_find_first(const std::string& directory, unsigned long attributes)
+os_string_type _file_find_first(const std::string& directory, unsigned long attributes)
 {
 	possix_search_handle.reset(new possix_file_find(directory, attributes));
-	return possix_search_handle->getCurrent().string();
+	auto ret = possix_search_handle->getCurrent().string();
+	return string_convert<os_string_type>(ret);
 }
 std::string _file_find_next()
 {
 	if (possix_search_handle != nullptr) {
 		possix_search_handle->advance();
-		return possix_search_handle->getCurrent().string();
+		auto ret = possix_search_handle->getCurrent().string();
+		return string_convert<os_string_type>(ret);
 	} else {
-		return "";
+		return string_convert<os_string_type>("");
 	}
 }
 void _file_find_close()
@@ -125,7 +131,7 @@ void _file_find_close()
 
 GMEXPORT double file_exists(const char* dirname)
 {
-	boost::filesystem::path p(MakeRichPath(dirname));
+	boost::filesystem::path p(MakeRichPath(string_convert<os_string_type>(dirname)));
 	return boost::filesystem::exists(p) && ((_get_attributes(p) & ::GMdirectory) == 0);
 }
 GMEXPORT double directory_exists(const char* dirname)
@@ -175,14 +181,14 @@ GMEXPORT double file_copy(const char* filename, const char* newname)
 }
 GMEXPORT const char* file_find_first(const char* mask, double attributes)
 {
-	RETSTRING = _file_find_first(mask, static_cast<unsigned long>(attributes));
+	RETSTRING = string_convert<std::string>(_file_find_first(string_to_wstring(mask), static_cast<unsigned long>(attributes)));
 	return ::RETSTRING.c_str();
 }
 
 
 GMEXPORT const char* file_find_next()
 {
-	RETSTRING = _file_find_next();
+	RETSTRING = string_convert<std::string>(_file_find_next());
 	return RETSTRING.c_str();
 }
 GMEXPORT double file_find_close() 

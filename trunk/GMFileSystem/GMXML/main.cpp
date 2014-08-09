@@ -31,7 +31,7 @@ BOOL WINAPI DllMain(
 
 
 #else
-
+/*
 int main(int argc, char* argv[])
 {
 	//::YAML::Node y(YAML::LoadFile("testyaml.txt"));
@@ -40,5 +40,5 @@ int main(int argc, char* argv[])
 	em << n;	
 	std::string mystr(em.c_str());
 	std::cout << mystr << std::endl;
-}
+}//*/
 #endif

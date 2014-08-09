@@ -10,9 +10,15 @@
 
 int _file_bin_open(boost::filesystem::path filename, std::ios_base::open_mode mode) 
 {
-	return _file_bin_open(filename.string(), mode);
+	os_string_type fname_string;
+#ifdef _WIN32
+	fname_string = string_convert<os_string_type> (filename.wstring());
+#else
+	fname_string = string_convert<os_string_type> (filename.string());
+#endif
+	return _file_bin_open(fname_string, mode);
 }
-int _file_bin_open(std::string filename, std::ios_base::open_mode mode) 
+int _file_bin_open(const os_string_type& filename, std::ios_base::open_mode mode) 
 {
 	int newindex(-1);
 	std::unique_ptr<std::fstream> file(new std::fstream(filename, std::ios_base::binary | mode));
@@ -84,6 +90,7 @@ void _file_bin_seek(int file, int offset, std::ios_base::seekdir dir)
 
 GMEXPORT double file_bin_open(const char* filename, double mode)
 {
+	auto os_filename(string_convert<os_string_type>(filename));
 	std::ios_base::open_mode openmode;
 	switch (static_cast<int>(mode)) {
 	case 0:
@@ -96,7 +103,7 @@ GMEXPORT double file_bin_open(const char* filename, double mode)
 		openmode = std::ios_base::in | std::ios_base::out;
 		break;
 	}
-	return _file_bin_open(MakeRichPath(filename),openmode);
+	return _file_bin_open(MakeRichPath(os_filename),openmode);
 }
 
 GMEXPORT double file_bin_read_byte(double file)

@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <locale>
 
 #include <boost/filesystem.hpp>
@@ -17,6 +17,7 @@
 
 
 //std::FILE
+#include <fstream>
 
 #ifdef _WINDLL
 BOOL WINAPI DllMain(
@@ -43,7 +44,13 @@ BOOL WINAPI DllMain(
 #else
 	int main() {
 		_setLocale("");
-		auto file = ::file_text_open_read("testfile.txt");
+		const char*  c = "c:\\\xD0\x92.txt";
+
+		auto tst = file_exists(c);
+		auto file = file_text_open_read(c);
+		auto txt = file_text_read_string(file);
+
+		/*auto file = ::file_text_open_read("testfile.txt");
 		auto tmp(::file_text_read_char(file, 4));
 		std::cout << tmp << std::endl;
 
@@ -58,8 +65,16 @@ BOOL WINAPI DllMain(
 		std::cout << file_text_read_real(file) << std::endl;
 		file_text_readln(file);
 		std::cout << file_text_read_real(file) << std::endl;
-		std::cout << file_text_read_string(file) << std::endl;
+		std::cout << file_text_read_real(file) << std::endl;
 		file_text_readln(file);
+		std::cout << file_text_read_string(file) << std::endl;
+		file_text_readln(file);//*/
+		std::cout << std::endl << std::endl;
+		
+
+
+		
+
 		
 		//std::cout << boost::lexical_cast<double>("1,253") << std::endl;
 		return 0;

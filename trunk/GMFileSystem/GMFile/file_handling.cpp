@@ -4,6 +4,7 @@
 #include <ios>
 #include <deque>
 #include <locale>
+#include <codecvt>
 
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
@@ -11,6 +12,9 @@
 
 #include "file_handling.h"
 #include "standard_functions.h"
+#define NOMINMAX
+#include <Windows.h>
+
 
 static std::string RetString;
 std::deque<std::unique_ptr<std::fstream>>& OpenFilestreams() {
@@ -32,7 +36,7 @@ bool _setLocale(const std::string& localestr)
 	try {
 		std::locale::global(std::locale(localestr));
 		return true;
-	} catch (std::exception& err) {
+	} catch (std::exception&) {
 		return false;
 	}
 }
@@ -63,9 +67,10 @@ void DeleteFilestream(int ind) {
 
 int _file_text_open_read(boost::filesystem::path filename) 
 {
-	return _file_text_open_read(filename.string());
+	os_string_type fname_string = boost_path_to_os_string(filename);
+	return _file_text_open_read(fname_string);
 }
-int _file_text_open_read(const std::string& filename) 
+int _file_text_open_read(const os_string_type& filename) 
 {
 	int newindex(-1);
 	std::unique_ptr<std::fstream> file(new std::fstream(filename, std::ios_base::in));
@@ -76,7 +81,7 @@ int _file_text_open_read(const std::string& filename)
 }
 std::string _file_text_read_string(int file)
 {
-	std::string retString("");
+	std::string retString;
 	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
 		std::getline(*OpenFilestreams()[file], retString);
 		OpenFilestreams()[file]->unget();
@@ -117,7 +122,7 @@ double _file_text_read_real(int file)
 					try {
 						ret = boost::lexical_cast<double>(tmp);
 						backtrack = 0;
-					} catch(boost::bad_lexical_cast& err) {
+					} catch(boost::bad_lexical_cast&) {
 						break;
 					}
 				}
@@ -139,9 +144,10 @@ void _file_text_readln(int file)
 
 int _file_text_open_append(boost::filesystem::path filename) 
 {
-	return _file_text_open_append(filename.string());
+	os_string_type fname_string = boost_path_to_os_string(filename);
+	return _file_text_open_append(fname_string);
 }
-int _file_text_open_append(const std::string& filename) 
+int _file_text_open_append(const os_string_type& filename) 
 {
 	int newindex(-1);
 	std::unique_ptr<std::fstream> file(new std::fstream(filename, std::ios_base::app));
@@ -152,9 +158,10 @@ int _file_text_open_append(const std::string& filename)
 }
 int _file_text_open_write(boost::filesystem::path filename) 
 {
-	return _file_text_open_write(filename.string());
+	os_string_type fname_string = boost_path_to_os_string(filename);
+	return _file_text_open_write(fname_string);
 }
-int _file_text_open_write(const std::string& filename) 
+int _file_text_open_write(const os_string_type& filename) 
 {
 	int newindex(-1);
 	std::unique_ptr<std::fstream> file(new std::fstream(filename, std::ios_base::out));
@@ -222,14 +229,14 @@ bool _file_bad(int file)
 	}
 	return false;
 }
-void _file_set_fail(int file, bool fail)
+void _file_set_fail(int file)
 {
 	if (isValidIndex(file)) {
 		auto flags(OpenFilestreams()[file]->rdstate() & ~std::ios::failbit);
 		OpenFilestreams()[file]->clear(flags);
 	}
 }
-void _file_set_bad(int file, bool bad)
+void _file_set_bad(int file)
 {
 	if (isValidIndex(file)) {
 		auto flags(OpenFilestreams()[file]->rdstate() & ~std::ios::badbit);
@@ -256,16 +263,39 @@ GMEXPORT double set_locale(const char* locale)
 
 GMEXPORT double file_text_open_read(const char* filename)
 {
-	return _file_text_open_read(MakeRichPath(filename));
+
+	auto os_filename(string_convert<os_string_type>(filename));
+	//int l = strlen(filename);
+	//std::wstring display(L"");
+	//for (int i(0); i < l; ++i) {
+	//	unsigned char c = filename[i];
+	//	// c = 0xD0;
+	//	unsigned int ic = static_cast<unsigned int> (c);
+	//	auto char_code = boost::lexical_cast<std::wstring>(ic);
+	//	display += char_code + L"   ";
+	//}
+	//LPCWSTR out = (LPCWSTR)display.c_str();
+	//::MessageBox(0, out, os_filename.c_str() ,MB_ICONERROR);
+
+	//boost::filesystem::path p(os_filename);
+	//auto str = p.string();
+	//os_string_type os_str = string_convert<os_string_type>(str);
+	//auto wstr = p.wstring();
+	//os_string_type os_wstr = string_convert<os_string_type>(str);
+
+	return _file_text_open_read(MakeRichPath(os_filename));
 }
 GMEXPORT const char* file_text_read_string(double file)
 {
 	RetString = _file_text_read_string(static_cast<int>(file));
+	///TODO: make all strings UTF8
+
 	return RetString.c_str();
 }
 GMEXPORT double file_text_read_real(double file) 
 {
 	return _file_text_read_real(static_cast<int>(file));
+	
 }
 GMEXPORT const char* file_text_read_char(double file, double num)
 {
@@ -287,11 +317,13 @@ GMEXPORT double file_text_readln(double file)
 
 GMEXPORT double file_text_open_append(const char* filename)
 {
-	return _file_text_open_append(MakeRichPath(filename));
+	auto os_filename(string_convert<os_string_type>(filename));
+	return _file_text_open_append(MakeRichPath(os_filename));
 }
 GMEXPORT double file_text_open_write(const char* filename)
 {
-	return _file_text_open_write(MakeRichPath(filename));
+	auto os_filename(string_convert<os_string_type>(filename));
+	return _file_text_open_write(MakeRichPath(os_filename));
 }
 GMEXPORT double file_text_write_string(double file, const char* input)
 {
@@ -332,17 +364,16 @@ GMEXPORT double file_bad(double file)
 {
 	return _file_bad(static_cast<int>(file));
 }
-GMEXPORT double file_set_fail(double file, double fail)
+GMEXPORT double file_clear_fail(double file)
 {
-	_file_set_fail(static_cast<int>(file), fail != 0);
+	_file_set_fail(static_cast<int>(file));
 	return 0;
 }
-GMEXPORT double file_set_bad(double file, double bad)
+GMEXPORT double file_clear_bad(double file)
 {
-	_file_set_bad(static_cast<int>(file), bad != 0);
+	_file_set_bad(static_cast<int>(file));
 	return 0;
 }
-GMEXPORT double file_set_bad(double file, double fail);
 GMEXPORT double file_write_flush(double file)
 {
 	_file_write_flush(static_cast<int>(file));

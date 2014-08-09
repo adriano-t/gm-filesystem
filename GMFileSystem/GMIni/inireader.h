@@ -4,26 +4,28 @@
 #include <memory>
 #include <deque>
 #include <boost/property_tree/ptree.hpp>
-
+#include "../GMFile/standard_functions.h"
 #define GMEXPORT extern "C" __declspec (dllexport)
 
 class ini_data {
 public:
-	typedef boost::property_tree::ptree ini_tree;
+	typedef std::string key_type;
+	typedef std::string value_type;
+	typedef boost::property_tree::basic_ptree<key_type, value_type> ini_tree;
 	typedef std::unique_ptr<ini_tree> upini_tree;
 
-	ini_data(const std::string& fname);
+	ini_data(const os_string_type& fname);
 
 	~ini_data();
 
-	std::string read_string(const std::string& section, const std::string& key, const std::string& def) const;
-	void write_string(const std::string& section, const std::string& key, const std::string& value);
-	double read_real(const std::string& section, const std::string& key, double def) const;
-	void write_real(const std::string& section, const std::string& key, double value);
-	bool section_exists(const std::string& section) const;
-	void section_delete(const std::string& section);
-	bool key_exists(const std::string& section, const std::string& key) const;
-	void key_delete(const std::string& section, const std::string& key);
+	value_type read_string(const key_type& section, const key_type& key, const value_type& def) const;
+	void write_string(const key_type& section, const key_type& key, const value_type& value);
+	double read_real(const key_type& section, const key_type& key, double def) const;
+	void write_real(const key_type& section, const key_type& key, double value);
+	bool section_exists(const key_type& section) const;
+	void section_delete(const key_type& section);
+	bool key_exists(const key_type& section, const key_type& key) const;
+	void key_delete(const key_type& section, const key_type& key);
 
 	inline static std::deque<std::unique_ptr<ini_data> >& OpenIniFiles();
 	inline static std::deque<int>& OpenSpots();
@@ -38,14 +40,14 @@ private:
 
 	
 
-	static ini_tree::path_type GetPath(const std::string& section, const std::string& key);
+	static ini_tree::path_type GetPath(const key_type& section, const key_type& key);
 
 	void load_ini();
 	void save_ini();
 
 
 	upini_tree data;
-	std::string filename;
+	os_string_type filename;
 	bool constructed;
 };
 

@@ -3,8 +3,8 @@
 #include <iostream>
 #include <Windows.h>
 
-#include "autoconfig.h"
 #include "image_handling.h"
+#include "allresources.h"
 #include "../GMFile/standard_functions.h"
 
 
@@ -32,30 +32,11 @@ BOOL WINAPI DllMain(
 
 int main(int argc, char* argv[])
 {
-
-	::set_working_directory("%localappdata%\\fs_test\\moartest");
-	std::clock_t begin(std::clock());
-	std::clock_t end(std::clock());
-	::set_gm_save_area("%localappdata%\\fs_test\\moartest");
-
-	int m(0);
-	m=0;
-	//begin = std::clock();
-	//for (int j(0); j < 1; ++j) {
-	//	for (int i(0); i < 10; ++i) {
-	//		copy_convert("img.bmp");
-	//		++m;
-	//	}
-	//	clean_temporary();
-	//}
-	::export_image("2828-60ff.png", "thisisatest.ppm");
-
-
-	++m;
-	end = std::clock();
+	//_T("test");
+	::set_working_directory("%appdata%\\fs_test");
+	::set_gm_save_area("%appdata%\\fs_test");
 	
-	std::cout << "bmp, opencv: " << end - begin <<  std::endl;
-	std::cout << "   per file: "  << double(end - begin) / m << std::endl;
+	::export_image("C:\\Users\\user\\AppData\\Roaming\\fs_test\\\xD0\x92.jpg", "c:\\\xD0\x94\xD2\x8A.bmp");
 	
 }
 #endif

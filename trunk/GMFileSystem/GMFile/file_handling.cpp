@@ -67,7 +67,7 @@ void DeleteFilestream(int ind) {
 
 int _file_text_open_read(boost::filesystem::path filename) 
 {
-	os_string_type fname_string = boost_path_to_os_string(filename);
+	os_string_type fname_string = path_to_string(filename);
 	return _file_text_open_read(fname_string);
 }
 int _file_text_open_read(const os_string_type& filename) 
@@ -144,7 +144,7 @@ void _file_text_readln(int file)
 
 int _file_text_open_append(boost::filesystem::path filename) 
 {
-	os_string_type fname_string = boost_path_to_os_string(filename);
+	os_string_type fname_string = path_to_string(filename);
 	return _file_text_open_append(fname_string);
 }
 int _file_text_open_append(const os_string_type& filename) 
@@ -158,7 +158,7 @@ int _file_text_open_append(const os_string_type& filename)
 }
 int _file_text_open_write(boost::filesystem::path filename) 
 {
-	os_string_type fname_string = boost_path_to_os_string(filename);
+	os_string_type fname_string = path_to_string(filename);
 	return _file_text_open_write(fname_string);
 }
 int _file_text_open_write(const os_string_type& filename) 

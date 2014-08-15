@@ -45,10 +45,17 @@ BOOL WINAPI DllMain(
 	int main() {
 		_setLocale("");
 		const char*  c = "c:\\\xD0\x92.txt";
+		std::wstring wfname = string_convert<os_string_type>(c);
+		boost::filesystem::path file_path(wfname);
 
-		auto tst = file_exists(c);
-		auto file = file_text_open_read(c);
-		auto txt = file_text_read_string(file);
+		std::ifstream fstr(path_to_string(file_path));
+		if (fstr.bad() ){
+			std::cout << "opening failed\n";
+		}
+		std::cout << std::endl;
+		std::string s;
+		std::getline(fstr, s);
+		std::cout << s;
 
 		/*auto file = ::file_text_open_read("testfile.txt");
 		auto tmp(::file_text_read_char(file, 4));

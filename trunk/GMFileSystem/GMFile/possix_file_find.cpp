@@ -38,7 +38,7 @@ bool possix_file_find::fits_mask()
 	if (current == end_itr) {
 		return false;
 	}
-	os_string_type fname(boost_path_to_os_string(current->path().filename()));
+	os_string_type fname(path_to_string(current->path().filename()));
 	return std::regex_match(fname, mask);
 }
 bool possix_file_find::fits_attributelist()
@@ -46,7 +46,7 @@ bool possix_file_find::fits_attributelist()
 	if (current == end_itr) {
 		return false;
 	}
-	os_string_type testname(boost_path_to_os_string(current->path()));
+	os_string_type testname(path_to_string(current->path()));
 	unsigned long attributes(get_attributes(*current));
 	bool subtest1 = (attributes & ::GMdirectory) != 0;
 	bool test1 = ((attr & ~GMdirectory) != 0 || subtest1);
@@ -89,7 +89,7 @@ void possix_file_find::string_replace_all(os_string_type& string, const os_strin
 
 void possix_file_find::MakeRegex(const boost::filesystem::path& filename)
 {
-	MakeRegex(boost_path_to_os_string(filename));
+	MakeRegex(path_to_string(filename));
 }
 void possix_file_find::MakeRegex(os_string_type filename)
 {

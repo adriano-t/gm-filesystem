@@ -2,15 +2,16 @@
 #include <string>
 #include <deque>
 #include <boost/filesystem.hpp>
+#include "../GMFile/standard_functions.h"
 
 #define GMEXPORT extern "C" __declspec (dllexport)
 
-boost::filesystem::path find_unique_fname(const std::string&  extension);
-boost::filesystem::path find_unique_fname(const boost::filesystem::path directory, const std::string&  extension);
+os_path_type find_unique_fname(const os_string_type&  extension);
+os_path_type find_unique_fname(const os_path_type& directory, const os_string_type&  extension);
 
-std::string _copy_keep_extension(const std::string& filename, const std::string& extension);
+boost::filesystem::path _copy_keep_extension(const boost::filesystem::path& filename, const os_string_type& extension);
 
-bool export_direct(const std::string& tempfile, const std::string& filename);
+bool export_direct(const boost::filesystem::path& temppath, const boost::filesystem::path& filename);
 
 GMEXPORT const char* copy_fast(const char* filename); 
 
@@ -23,6 +24,6 @@ GMEXPORT double export_sound(const char* tempfile, const char* filename);
 GMEXPORT double export_raw(const char* tempfile, const char* filename); 
 
 
-extern std::deque<boost::filesystem::path> added_files;
-extern boost::filesystem::path working_dir;
-extern boost::filesystem::path save_dir;
+extern std::deque<os_path_type> added_files;
+extern os_path_type working_dir;
+extern os_path_type save_dir;

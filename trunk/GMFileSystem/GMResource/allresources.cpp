@@ -22,16 +22,17 @@ inline const char* ReturnString(const std::string& val)
 
 
 
-boost::filesystem::path find_unique_fname(const std::string& extension) 
+os_path_type find_unique_fname(const os_string_type& extension) 
 {
 	return find_unique_fname(working_dir, extension);
 }
-boost::filesystem::path find_unique_fname(const boost::filesystem::path directory, const std::string&  extension)
+boost::filesystem::path find_unique_fname(const os_path_type& directory, const os_string_type&  extension)
 {
-	boost::filesystem::path newfilename;
-	std::string fname("%%%%");
+	os_path_type newfilename;
+	os_string_type fname(_T("%%%%"));
+	const os_string_type append(_T("%%%%")); 
 	do {
-		fname += "-%%%%";
+		fname += append;
 		newfilename = boost::filesystem::unique_path(directory / (fname + extension));
 	} while (boost::filesystem::exists(newfilename));
 
@@ -42,11 +43,12 @@ boost::filesystem::path find_unique_fname(const boost::filesystem::path director
 
 
 
-std::string _copy_keep_extension(const std::string& filename, const std::string& extension) 
+boost::filesystem::path _copy_keep_extension(const boost::filesystem::path& filename, const os_string_type& extension) 
 {
 	boost::filesystem::path newfilename(find_unique_fname(extension));
 	try {
 		boost::filesystem::create_hard_link(filename, newfilename); //create hard link should work....
+		//boost::filesystem::
 		added_files.push_back(newfilename);
 	} catch (boost::filesystem::filesystem_error& err) {
 		auto c(err.code().value());
@@ -58,26 +60,25 @@ std::string _copy_keep_extension(const std::string& filename, const std::string&
 #ifdef _DEBUG
 				std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
 				tstr += err2.what();
-				::MessageBoxA(0, tstr.c_str(), "copy fail",MB_ICONERROR);
+				::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), _T("copy fail"),MB_ICONERROR);
 #endif
-				return "";
+				return boost::filesystem::path();
 			}
 		} else {
 #ifdef _DEBUG
 			std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
 			tstr += err.what();
-			MessageBoxA(0, tstr.c_str(), "hardlink fail" ,MB_ICONERROR);
+			MessageBox(0, string_convert<os_string_type>(tstr).c_str(), _T("hardlink fail") ,MB_ICONERROR);
 #endif
-			return "";
+			return boost::filesystem::path();
 		}
 	}
-	return newfilename.string();
+	return newfilename;
 }
 
 
-bool export_direct(const std::string& tempfile, const std::string& filename) 
+bool export_direct(const boost::filesystem::path& temppath, const boost::filesystem::path& filename) 
 {
-	boost::filesystem::path temppath = tempfile;
 	added_files.push_back(temppath);
 	try {
 		boost::filesystem::create_hard_link(temppath, filename); //create hard link should work....
@@ -106,29 +107,34 @@ bool export_direct(const std::string& tempfile, const std::string& filename)
 	return true;
 }
 
+
 GMEXPORT const char* copy_fast(const char* filename) 
 {
-	std::string file(MakeRichPath(filename));
-	std::string ext( file.substr(file.rfind('.')));
-	return ReturnString(_copy_keep_extension(file, ext));
+	os_string_type file(MakeRichPath(string_convert<os_string_type>(filename)));
+	os_string_type ext( file.substr(file.rfind('.')));
+	return ReturnString(_copy_keep_extension(file, ext).string());
 }
 GMEXPORT const char*  find_unique_fname(const char* directory, const char* extension)
 {
-	std::string d(directory);
-	if (d == "") {
-		return ReturnString(find_unique_fname(save_dir, std::string(extension)).string());
+	auto dir(string_convert<os_string_type>(directory));
+	auto ext(string_convert<os_string_type>(extension));
+	os_path_type newpath;
+	
+	if (dir.empty()) {
+		newpath = find_unique_fname(save_dir, ext);
 	} else {
-		return ReturnString(find_unique_fname(boost::filesystem::path(directory), std::string(extension)).string());
+		newpath = find_unique_fname(os_path_type(dir), ext);
 	}
+	return ReturnString(string_convert<std::string>(newpath.string()));
 }
 GMEXPORT double set_working_directory(const char* filename) 
 {
-	working_dir = MakeRichPath(filename);
+	working_dir = os_path_type(MakeRichPath(string_convert<os_string_type>(filename)));
 	return 0;
 }
 GMEXPORT double set_gm_save_area(const char* directory)
 { //ONLY THANKS TO A MISSING FEATURE IN GM THIS HAS TO BE DONE
-	save_dir = MakeRichPath(directory);
+	save_dir = os_path_type(MakeRichPath(string_convert<os_string_type>(directory)));
 	return 0;
 }
 GMEXPORT double clean_temporary()
@@ -140,11 +146,7 @@ GMEXPORT double clean_temporary()
 		bool b(boost::filesystem::exists(t));
 		try {
 			boost::filesystem::remove(t);
-		} catch (boost::filesystem::filesystem_error err) {
-			auto w(err.what());
-			auto c(err.code());
-			auto m(c.message());
-			auto v(c.value());
+		} catch (boost::filesystem::filesystem_error&) {
 		}
 		added_files.pop_back();
 		++n;
@@ -153,9 +155,9 @@ GMEXPORT double clean_temporary()
 }
 GMEXPORT double export_sound(const char* tempfile, const char* filename)
 {
-	return export_direct(tempfile, filename);
+	return export_direct(string_convert<os_string_type>(tempfile), MakeRichPath(string_convert<os_string_type>(filename)));
 }
 GMEXPORT double export_raw(const char* tempfile, const char* filename)
 {
-	return export_direct(tempfile, filename);
+	return export_direct(string_convert<os_string_type>(tempfile), MakeRichPath(string_convert<os_string_type>(filename)));
 }

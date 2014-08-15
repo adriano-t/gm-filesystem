@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GMIni", "GMIni\GMIni.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GMXML", "GMXML\GMXML.vcxproj", "{67127FF3-13C9-4692-A570-5C496E66F813}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testdll", "testdll\testdll.vcxproj", "{878C3F0B-B746-49EC-9F98-675BFD5B084F}"
-EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -46,12 +44,6 @@ Global
 		{67127FF3-13C9-4692-A570-5C496E66F813}.Debug|Win32.Build.0 = Debug|Win32
 		{67127FF3-13C9-4692-A570-5C496E66F813}.Release|Win32.ActiveCfg = Release|Win32
 		{67127FF3-13C9-4692-A570-5C496E66F813}.Release|Win32.Build.0 = Release|Win32
-		{878C3F0B-B746-49EC-9F98-675BFD5B084F}.Debug Executable|Win32.ActiveCfg = Debug|Win32
-		{878C3F0B-B746-49EC-9F98-675BFD5B084F}.Debug Executable|Win32.Build.0 = Debug|Win32
-		{878C3F0B-B746-49EC-9F98-675BFD5B084F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{878C3F0B-B746-49EC-9F98-675BFD5B084F}.Debug|Win32.Build.0 = Debug|Win32
-		{878C3F0B-B746-49EC-9F98-675BFD5B084F}.Release|Win32.ActiveCfg = Release|Win32
-		{878C3F0B-B746-49EC-9F98-675BFD5B084F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

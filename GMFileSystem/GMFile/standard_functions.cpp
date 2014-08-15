@@ -123,7 +123,7 @@ std::wstring MakeRichPath(std::wstring inputString)
 
 	return inputString;
 }
-os_string_type boost_path_to_os_string(const boost::filesystem::path& p) {
+os_string_type path_to_string(const boost::filesystem::path& p) {
 	os_string_type fname_string;
 #ifdef _WIN32
 	fname_string = string_convert<os_string_type> (p.wstring());

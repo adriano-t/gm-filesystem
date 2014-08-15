@@ -29,12 +29,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="autoconfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="auto_link.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="image_handling.h">
       <Filter>Header Files</Filter>
     </ClInclude>

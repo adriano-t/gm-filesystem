@@ -80,7 +80,11 @@ boost::filesystem::path _copy_keep_extension(const boost::filesystem::path& file
 bool export_direct(const boost::filesystem::path& temppath, const boost::filesystem::path& filename) 
 {
 	added_files.push_back(temppath);
+
 	try {
+		if (boost::filesystem::exists(filename)) {
+			boost::filesystem::remove(filename);
+		}
 		boost::filesystem::create_hard_link(temppath, filename); //create hard link should work....
 	} catch (boost::filesystem::filesystem_error& err) {
 		auto c(err.code().value());
@@ -91,7 +95,7 @@ bool export_direct(const boost::filesystem::path& temppath, const boost::filesys
 #ifdef _DEBUG
 				std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
 				tstr += err2.what();
-				::MessageBoxA(0, tstr.c_str(), "copy fail",MB_ICONERROR);
+				::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), _T("copy fail"),MB_ICONERROR);
 #endif
 				return false;
 			}
@@ -99,7 +103,7 @@ bool export_direct(const boost::filesystem::path& temppath, const boost::filesys
 #ifdef _DEBUG
 			std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
 			tstr += err.what();
-			MessageBoxA(0, tstr.c_str(), "hardlink fail" ,MB_ICONERROR);
+			MessageBox(0, string_convert<os_string_type>(tstr).c_str(), _T("hardlink fail") ,MB_ICONERROR);
 #endif
 			return false;
 		}

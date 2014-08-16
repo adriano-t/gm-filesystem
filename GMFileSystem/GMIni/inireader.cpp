@@ -94,7 +94,7 @@ void ini_data::load_ini()
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
 		tstr += err.what();
-		::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), string_convert<os_string_type>("ini loading fail").c_str(),MB_ICONERROR);
+		::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), _T("ini loading fail"),MB_ICONERROR);
 #endif
 	}
 	
@@ -144,7 +144,7 @@ double ini_data::read_real(const key_type& section, const key_type& key, double 
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
 		tstr += err.what();
-		::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), string_convert<os_string_type>("data conversion fail").c_str(),MB_ICONERROR);
+		::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), _T("data conversion fail"),MB_ICONERROR);
 #endif
 	}
 	return 0;
@@ -158,7 +158,7 @@ void ini_data::write_string(const key_type& section, const key_type& key, const 
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
 		tstr += err.what();
-		::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), string_convert<os_string_type>("ini string writing fail").c_str(),MB_ICONERROR);
+		::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), _T("ini string writing fail"),MB_ICONERROR);
 #endif
 	}
 }
@@ -173,13 +173,13 @@ void ini_data::write_real(const key_type& section, const key_type& key, double v
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
 		tstr += err.what();
-		::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), string_convert<os_string_type>("ini real writing fail").c_str(),MB_ICONERROR);
+		::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), _T("ini real writing fail"),MB_ICONERROR);
 #endif
 	} catch (boost::bad_lexical_cast& err) {
 #ifdef _DEBUG
 		std::string tstr = std::string("  file: ") + __FILE__ + "\n  line: " + boost::lexical_cast<std::string>(__LINE__) +"\n\n";
 		tstr += err.what();
-		::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), string_convert<os_string_type>("data conversion fail").c_str(),MB_ICONERROR);
+		::MessageBox(0, string_convert<os_string_type>(tstr).c_str(), _T("data conversion fail"),MB_ICONERROR);
 #endif
 	}
 }

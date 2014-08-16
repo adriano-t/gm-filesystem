@@ -15,7 +15,7 @@
 
 #define GMEXPORT extern "C" __declspec (dllexport)
 
-
+GMEXPORT const char* current_directory();
 
 GMEXPORT double directory_exists(const char* dirname);
 GMEXPORT double directory_create(const char* dirname);

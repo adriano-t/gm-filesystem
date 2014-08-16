@@ -13,6 +13,11 @@
 
 
 static std::string RETSTRING;
+inline const char* ReturnString(const std::string& val)
+{
+	RetString = val;
+	return RetString.c_str();
+}
 
 unsigned long _get_attributes(const boost::filesystem::path& file);
 os_string_type _file_find_first(const os_string_type& directory, unsigned long attributes);
@@ -112,14 +117,14 @@ os_string_type _file_find_first(const std::string& directory, unsigned long attr
 	auto ret = possix_search_handle->getCurrent().string();
 	return string_convert<os_string_type>(ret);
 }
-std::string _file_find_next()
+os_string_type _file_find_next()
 {
 	if (possix_search_handle != nullptr) {
 		possix_search_handle->advance();
 		auto ret = possix_search_handle->getCurrent().string();
 		return string_convert<os_string_type>(ret);
 	} else {
-		return string_convert<os_string_type>("");
+		return os_string_type();
 	}
 }
 void _file_find_close()
@@ -129,6 +134,11 @@ void _file_find_close()
 
 #endif
 
+
+GMEXPORT const char* current_directory()
+{
+	return ReturnString(boost::filesystem::current_path().string());
+}
 GMEXPORT double file_exists(const char* dirname)
 {
 	boost::filesystem::path p(MakeRichPath(string_convert<os_string_type>(dirname)));

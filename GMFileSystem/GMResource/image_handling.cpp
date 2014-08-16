@@ -170,7 +170,7 @@ GMEXPORT double export_image(const char* tempfile, const char* filename)
 	os_string_type exportfile(MakeRichPath(string_convert<os_string_type>(filename)));
 	os_string_type ext( exportfile.substr(exportfile.rfind('.')));
 	if (ext == _T(".png")) {
-		return export_direct(importfile, exportfile)
+		return export_direct(importfile, exportfile);
 	} else {
 		return export_image_opencv(importfile, exportfile);
 	}

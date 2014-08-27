@@ -355,37 +355,37 @@ GMEXPORT double file_text_writeln(double file)
 
 
 
-GMEXPORT double file_eof(double file)
+GMEXPORT double file_text_eof(double file)
 {
 	return _file_eof(static_cast<int>(file));
 }
-GMEXPORT double file_eoln(double file)
+GMEXPORT double file_text_eoln(double file)
 {
 	return _file_eoln(static_cast<int>(file));
 }
-GMEXPORT double file_good(double file)
+GMEXPORT double file_text_good(double file)
 {
 	return _file_good(static_cast<int>(file));
 }
-GMEXPORT double file_fail(double file)
+GMEXPORT double file_text_fail(double file)
 {
 	return _file_fail(static_cast<int>(file));
 }
-GMEXPORT double file_bad(double file)
+GMEXPORT double file_text_bad(double file)
 {
 	return _file_bad(static_cast<int>(file));
 }
-GMEXPORT double file_clear_fail(double file)
+GMEXPORT double file_text_clear_fail(double file)
 {
 	_file_clear_fail(static_cast<int>(file));
 	return 0;
 }
-GMEXPORT double file_clear_bad(double file)
+GMEXPORT double file_text_clear_bad(double file)
 {
 	_file_clear_bad(static_cast<int>(file));
 	return 0;
 }
-GMEXPORT double file_write_flush(double file)
+GMEXPORT double file_text_write_flush(double file)
 {
 	_file_write_flush(static_cast<int>(file));
 	return 0.0;

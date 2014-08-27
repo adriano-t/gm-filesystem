@@ -33,7 +33,7 @@ bool _file_bin_fail(int file);
 bool _file_bin_bad(int file);
 void _file_bin_clear_fail(int file);
 void _file_bin_clear_bad(int file);
-
+void _file_bin_write_flush(int file);
 void _file_bin_close(int file);
 
 
@@ -62,6 +62,6 @@ GMEXPORT double file_bin_fail(double file);
 GMEXPORT double file_bin_bad(double file);
 GMEXPORT double file_bin_clear_fail(double file);
 GMEXPORT double file_bin_clear_bad(double file);
-
+GMEXPORT double file_bin_write_flush(double file);
 
 GMEXPORT double file_bin_close(double file);

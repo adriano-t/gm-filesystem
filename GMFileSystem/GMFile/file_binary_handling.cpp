@@ -164,6 +164,12 @@ void _file_bin_clear_bad(int file)
 		OpenFileBinstreams()[file]->clear(OpenFileBinstreams()[file]->rdstate() & ~std::ios::badbit);
 	}
 }
+void _file_bin_write_flush(int file) 
+{
+	if (isValidBinIndex(file) && OpenFileBinstreams()[file]->good()) {
+		OpenFileBinstreams()[file]->flush();
+	}
+}
 void _file_bin_close(int file)
 {
 	if (isValidBinIndex(file)) {
@@ -273,6 +279,11 @@ GMEXPORT double file_bin_clear_bad(double file)
 {
 	_file_bin_clear_bad(static_cast<int>(file));
 	return 0;
+}
+GMEXPORT double file_bin_write_flush(double file)
+{
+	_file_bin_write_flush(static_cast<int>(file));
+	return 0.0;
 }
 GMEXPORT double file_bin_close(double file)
 {

@@ -58,7 +58,6 @@ void _file_write_bom(int file);
 
 GMEXPORT double max_open();
 GMEXPORT double set_locale(const char* locale);
-GMEXPORT double set_linebreak_string(const char* str);
 
 GMEXPORT double file_text_open_read(const char* filename);
 GMEXPORT double file_text_open_read_ext(const char* filename, double encoding, double forced);
@@ -78,14 +77,14 @@ GMEXPORT double file_text_write_real(double file, double input);
 GMEXPORT double file_text_writeln(double file);
 
 
-GMEXPORT double file_eof(double file);
-GMEXPORT double file_eoln(double file);
-GMEXPORT double file_good(double file);
-GMEXPORT double file_fail(double file);
-GMEXPORT double file_bad(double file);
-GMEXPORT double file_clear_fail(double file);
-GMEXPORT double file_clear_bad(double file);
-GMEXPORT double file_write_flush(double file);
+GMEXPORT double file_text_eof(double file);
+GMEXPORT double file_text_eoln(double file);
+GMEXPORT double file_text_good(double file);
+GMEXPORT double file_text_fail(double file);
+GMEXPORT double file_text_bad(double file);
+GMEXPORT double file_text_clear_fail(double file);
+GMEXPORT double file_text_clear_bad(double file);
+GMEXPORT double file_text_write_flush(double file);
 GMEXPORT double file_close(double file);
 GMEXPORT double file_text_close(double file);
 

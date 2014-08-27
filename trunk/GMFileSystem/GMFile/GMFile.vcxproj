@@ -122,6 +122,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="filestream_organizer.cpp" />
     <ClCompile Include="possix_file_find.cpp" />
     <ClCompile Include="filesystem.cpp" />
     <ClCompile Include="file_binary_handling.cpp" />
@@ -130,6 +131,7 @@
     <ClCompile Include="standard_functions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="filestream_organizer.h" />
     <ClInclude Include="possix_file_find.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="file_binary_handling.h" />

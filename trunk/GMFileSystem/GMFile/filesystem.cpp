@@ -15,8 +15,8 @@
 static std::string RETSTRING;
 inline const char* ReturnString(const std::string& val)
 {
-	RetString = val;
-	return RetString.c_str();
+	RETSTRING = val;
+	return RETSTRING.c_str();
 }
 
 unsigned long _get_attributes(const boost::filesystem::path& file);
@@ -52,7 +52,7 @@ os_string_type _file_find_first(const os_string_type& directory, unsigned long a
 		BOOL finding(TRUE);
 		if (!fits_attributelist(outputData.dwFileAttributes)) {
 			os_string_type outstr(_file_find_next());
-			if (outstr == L"") {
+			if (outstr == _T("")) {
 				::_file_find_close();
 			}
 			return outstr;

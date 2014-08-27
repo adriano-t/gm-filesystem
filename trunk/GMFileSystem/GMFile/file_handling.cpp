@@ -12,18 +12,25 @@
 
 #include "file_handling.h"
 #include "standard_functions.h"
+#include "filestream_organizer.h"
 #define NOMINMAX
 #include <Windows.h>
 
 
+
 static std::string RetString;
-std::deque<std::unique_ptr<std::fstream>>& OpenFilestreams() {
-	static std::deque<std::unique_ptr<std::fstream>> result;
-	return result;
+#ifdef _WIN32
+static std::string DefEndl("\r\n");
+#else
+static std::string DefEndl("\n");
+#endif
+std::deque<pfstream_t>& OpenFilestreams() {
+	static std::deque<pfstream_t>* result = new std::deque<pfstream_t>;
+	return *result;
 }
 std::deque<int>& OpenSpots() {
-	static std::deque<int> result;
-	return result;
+	static std::deque<int>* result = new std::deque<int>;
+	return *result;
 }
 
 inline bool isValidIndex(int index) 
@@ -43,12 +50,12 @@ bool _setLocale(const std::string& localestr)
 
 
 
-int InsertFileStreamToVector(std::unique_ptr<std::fstream>&& file) 
+int InsertFileStreamToVector(pfstream_t&& file) 
 {
 	int ind;
 	if (OpenSpots().empty()) {
 			ind = OpenFilestreams().size();
-			OpenFilestreams().push_back(std::forward<std::unique_ptr<std::fstream>>(file));
+			OpenFilestreams().push_back(std::forward<pfstream_t>(file));
 	} else {
 			ind = OpenSpots().back();
 			OpenSpots().pop_back();
@@ -65,15 +72,15 @@ void DeleteFilestream(int ind) {
 	}
 }
 
-int _file_text_open_read(boost::filesystem::path filename) 
+int _file_text_open_read(const boost::filesystem::path& filename, filestream_organizer::encoding enc, bool forced) 
 {
 	os_string_type fname_string = path_to_string(filename);
-	return _file_text_open_read(fname_string);
+	return _file_text_open_read(fname_string, enc, forced);
 }
-int _file_text_open_read(const os_string_type& filename) 
+int _file_text_open_read(const os_string_type& filename, filestream_organizer::encoding enc, bool forced) 
 {
 	int newindex(-1);
-	std::unique_ptr<std::fstream> file(new std::fstream(filename, std::ios_base::in));
+	pfstream_t file(new fstream_t(filename, std::ios_base::in, DefEndl, enc, forced));
 	if (!file->fail()) {
 		newindex = InsertFileStreamToVector(std::move(file));
 	}
@@ -83,19 +90,17 @@ std::string _file_text_read_string(int file)
 {
 	std::string retString;
 	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
-		std::getline(*OpenFilestreams()[file], retString);
-		OpenFilestreams()[file]->unget();
+		retString = OpenFilestreams()[file]->getline();
 	}
 	return retString;
 }
-char* _file_text_read_char(int file, int number)
+std::string _file_text_read_char(int file, int number)
 {
-	char* buffer = new char[number + 1]();
+	std::string retString;
 	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
-		OpenFilestreams()[file]->get(buffer, number+1);
-		return buffer;
+		retString = OpenFilestreams()[file]->read(number);
 	}
-	return buffer;
+	return retString;
 }
 void _file_text_unread(int file)
 {
@@ -107,30 +112,28 @@ double _file_text_read_real(int file)
 {
 	double ret(0);
 	//boost::regex realtest("^$")
-	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
+	auto& d(OpenFilestreams());
+	pfstream_t& pfstr(d.at(file));
+	if (isValidIndex(file) && pfstr->good()) {
 		std::string tmp;
-		char lastchr;
+		std::string lastchr;
 		bool start(false);
-		int backtrack = 0;
-		while (lastchr = OpenFilestreams()[file]->get(), lastchr != '\n' && OpenFilestreams()[file]->good() ) {
-			start = start || !std::isspace(lastchr, std::locale());
+		auto backtrack(pfstr->tell());
+		while (lastchr = pfstr->get(), lastchr.size() > 0  && lastchr != "\n" && pfstr->good() ) {
+			start = start || !std::isspace(lastchr[0], std::locale());
 			if (start) {
 				tmp += lastchr;
-				if (lastchr == '-' || lastchr == '+' || lastchr == 'e' || lastchr == 'E' || lastchr == '.') {
-					++backtrack;
-				} else {
+				if (!(lastchr == "-" || lastchr == "+" || lastchr == "e" || lastchr == "E" || lastchr == "." || lastchr == ",")) {
 					try {
 						ret = boost::lexical_cast<double>(tmp);
-						backtrack = 0;
+						backtrack = pfstr->tell();
 					} catch(boost::bad_lexical_cast&) {
 						break;
 					}
 				}
 			}
 		}
-		for (int i(backtrack + 1); i > 0; --i) {
-			OpenFilestreams()[file]->unget();
-		}
+		pfstr->seek(backtrack);
 	}
 	return ret;
 }
@@ -138,33 +141,33 @@ double _file_text_read_real(int file)
 void _file_text_readln(int file) 
 {
 	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
-		OpenFilestreams()[file]->ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		OpenFilestreams()[file]->readln();
 	}
 }
 
-int _file_text_open_append(boost::filesystem::path filename) 
+int _file_text_open_append(const boost::filesystem::path& filename, filestream_organizer::encoding enc, bool forced) 
 {
 	os_string_type fname_string = path_to_string(filename);
-	return _file_text_open_append(fname_string);
+	return _file_text_open_append(fname_string, enc, forced);
 }
-int _file_text_open_append(const os_string_type& filename) 
+int _file_text_open_append(const os_string_type& filename, filestream_organizer::encoding enc, bool forced) 
 {
 	int newindex(-1);
-	std::unique_ptr<std::fstream> file(new std::fstream(filename, std::ios_base::app));
+	pfstream_t file(new fstream_t(filename, std::ios_base::app, DefEndl, enc, forced));
 	if (!file->fail()) {
 		newindex = InsertFileStreamToVector(std::move(file));
 	}
 	return newindex;
 }
-int _file_text_open_write(boost::filesystem::path filename) 
+int _file_text_open_write(const boost::filesystem::path& filename, filestream_organizer::encoding enc, bool forced) 
 {
 	os_string_type fname_string = path_to_string(filename);
-	return _file_text_open_write(fname_string);
+	return _file_text_open_write(fname_string, enc, forced);
 }
-int _file_text_open_write(const os_string_type& filename) 
+int _file_text_open_write(const os_string_type& filename, filestream_organizer::encoding enc, bool forced) 
 {
 	int newindex(-1);
-	std::unique_ptr<std::fstream> file(new std::fstream(filename, std::ios_base::out));
+	pfstream_t file(new fstream_t(filename, std::ios_base::out, DefEndl, enc, forced));
 	if (!file->fail()) {
 		newindex = InsertFileStreamToVector(std::move(file));
 	}
@@ -173,7 +176,7 @@ int _file_text_open_write(const os_string_type& filename)
 void _file_text_write_string(int file, const std::string& input)
 {
 	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
-		*OpenFilestreams()[file] << input;
+		OpenFilestreams()[file]->write_string(input);
 	}
 }
 void _file_text_write_real(int file, double input) 
@@ -183,7 +186,7 @@ void _file_text_write_real(int file, double input)
 void _file_text_writeln(int file) 
 {
 	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
-		*OpenFilestreams()[file] << '\n';
+		OpenFilestreams()[file]->writeln();
 	}
 }
 void _file_write_flush(int file) 
@@ -204,7 +207,7 @@ bool _file_eof(int file)
 bool _file_eoln(int file)
 {
 	if (isValidIndex(file)) {
-		return OpenFilestreams()[file]->peek() == '\n';
+		return OpenFilestreams()[file]->eoln();
 	}
 	return false;
 }
@@ -229,23 +232,28 @@ bool _file_bad(int file)
 	}
 	return false;
 }
-void _file_set_fail(int file)
+void _file_clear_fail(int file)
 {
 	if (isValidIndex(file)) {
-		auto flags(OpenFilestreams()[file]->rdstate() & ~std::ios::failbit);
-		OpenFilestreams()[file]->clear(flags);
+		OpenFilestreams()[file]->clear_fail();
 	}
 }
-void _file_set_bad(int file)
+void _file_clear_bad(int file)
 {
 	if (isValidIndex(file)) {
-		auto flags(OpenFilestreams()[file]->rdstate() & ~std::ios::badbit);
-		OpenFilestreams()[file]->clear(flags);
+		OpenFilestreams()[file]->clear_bad();
 	}
 }
-void _file_close(int file)
+void _file_text_close(int file)
 {
 	DeleteFilestream(file);
+}
+
+void _file_write_bom(int file)
+{
+	if (isValidIndex(file)) {
+		OpenFilestreams()[file]->write_BOM();
+	}
 }
 
 
@@ -265,26 +273,17 @@ GMEXPORT double file_text_open_read(const char* filename)
 {
 
 	auto os_filename(string_convert<os_string_type>(filename));
-	//int l = strlen(filename);
-	//std::wstring display(L"");
-	//for (int i(0); i < l; ++i) {
-	//	unsigned char c = filename[i];
-	//	// c = 0xD0;
-	//	unsigned int ic = static_cast<unsigned int> (c);
-	//	auto char_code = boost::lexical_cast<std::wstring>(ic);
-	//	display += char_code + L"   ";
-	//}
-	//LPCWSTR out = (LPCWSTR)display.c_str();
-	//::MessageBox(0, out, os_filename.c_str() ,MB_ICONERROR);
-
-	//boost::filesystem::path p(os_filename);
-	//auto str = p.string();
-	//os_string_type os_str = string_convert<os_string_type>(str);
-	//auto wstr = p.wstring();
-	//os_string_type os_wstr = string_convert<os_string_type>(str);
-
 	return _file_text_open_read(MakeRichPath(os_filename));
 }
+GMEXPORT double file_text_open_read_ext(const char* filename, double encoding, double forced)
+{
+	auto os_filename(string_convert<os_string_type>(filename));
+	filestream_organizer::encoding enc(static_cast <filestream_organizer::encoding>(static_cast<int>(encoding)));
+	bool f(forced != 0.0);
+	return _file_text_open_read(MakeRichPath(os_filename), enc, f);
+}
+
+
 GMEXPORT const char* file_text_read_string(double file)
 {
 	RetString = _file_text_read_string(static_cast<int>(file));
@@ -299,9 +298,7 @@ GMEXPORT double file_text_read_real(double file)
 }
 GMEXPORT const char* file_text_read_char(double file, double num)
 {
-	auto tmp(_file_text_read_char(static_cast<int>(file), static_cast<int>(num)));
-	RetString = tmp;
-	delete tmp;
+	RetString = _file_text_read_char(static_cast<int>(file), static_cast<int>(num));
 	return RetString.c_str();
 }
 GMEXPORT double file_text_unread(double file)
@@ -324,6 +321,20 @@ GMEXPORT double file_text_open_write(const char* filename)
 {
 	auto os_filename(string_convert<os_string_type>(filename));
 	return _file_text_open_write(MakeRichPath(os_filename));
+}
+GMEXPORT double file_text_open_append_ext(const char* filename, double encoding, double forced)
+{
+	auto os_filename(string_convert<os_string_type>(filename));
+	filestream_organizer::encoding enc(static_cast <filestream_organizer::encoding>(static_cast<int>(encoding)));
+	bool f(forced != 0.0);
+	return _file_text_open_append(MakeRichPath(os_filename), enc, f);
+}
+GMEXPORT double file_text_open_write_ext(const char* filename, double encoding, double forced)
+{
+	auto os_filename(string_convert<os_string_type>(filename));
+	filestream_organizer::encoding enc(static_cast <filestream_organizer::encoding>(static_cast<int>(encoding)));
+	bool f(forced != 0.0);
+	return _file_text_open_write(MakeRichPath(os_filename), enc, f);
 }
 GMEXPORT double file_text_write_string(double file, const char* input)
 {
@@ -366,12 +377,12 @@ GMEXPORT double file_bad(double file)
 }
 GMEXPORT double file_clear_fail(double file)
 {
-	_file_set_fail(static_cast<int>(file));
+	_file_clear_fail(static_cast<int>(file));
 	return 0;
 }
 GMEXPORT double file_clear_bad(double file)
 {
-	_file_set_bad(static_cast<int>(file));
+	_file_clear_bad(static_cast<int>(file));
 	return 0;
 }
 GMEXPORT double file_write_flush(double file)
@@ -382,7 +393,33 @@ GMEXPORT double file_write_flush(double file)
 
 GMEXPORT double file_close(double file)
 {
-	_file_close(static_cast<int>(file));
+	return file_text_close(file);
+}
+GMEXPORT double file_text_close(double file)
+{
+	_file_text_close(static_cast<int>(file));
+	return 0.0;
+}
+
+GMEXPORT double file_text_write_bom(double file)
+{
+	_file_write_bom(static_cast<int>(file));
+	return 0.0;
+}
+GMEXPORT double file_text_set_endl(const char* endl)
+{
+	DefEndl = endl;
+	return 0.0;
+}
+GMEXPORT double file_text_set_endl_windows()
+{
+	DefEndl = "\r\n";
+	return 0.0;
+}
+
+GMEXPORT double file_text_set_endl_posix()
+{
+	DefEndl= "\n";
 	return 0.0;
 }
 

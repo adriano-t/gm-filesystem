@@ -5,8 +5,37 @@
 #include <deque>
 
 #include "file_binary_handling.h"
-#include "file_handling.h"
 #include "standard_functions.h"
+
+
+std::deque<pfbstream_t>& OpenFileBinstreams() {
+	static std::deque<pfbstream_t>* result = new std::deque<pfbstream_t>;
+	return *result;
+}
+std::deque<int>& OpenBinSpots() {
+	static std::deque<int>* result = new std::deque<int>;
+	return *result;
+}
+
+int InsertFileStreamToBinVector(pfbstream_t&& file) 
+{
+	int ind;
+	if (OpenBinSpots().empty()) {
+			ind = OpenFileBinstreams().size();
+			OpenFileBinstreams().push_back(std::forward<pfbstream_t>(file));
+	} else {
+			ind = OpenBinSpots().back();
+			OpenBinSpots().pop_back();
+			OpenFileBinstreams()[ind] = std::move(file);
+	}
+	return ind;
+
+}
+inline bool isValidBinIndex(int index) 
+{
+	return index >= 0 && OpenFileBinstreams().size() > (unsigned int)index && OpenFileBinstreams()[index] != nullptr;
+}
+
 
 int _file_bin_open(boost::filesystem::path filename, std::ios_base::open_mode mode) 
 {
@@ -21,10 +50,10 @@ int _file_bin_open(boost::filesystem::path filename, std::ios_base::open_mode mo
 int _file_bin_open(const os_string_type& filename, std::ios_base::open_mode mode) 
 {
 	int newindex(-1);
-	std::unique_ptr<std::fstream> file(new std::fstream(filename, std::ios_base::binary | mode));
+	pfbstream_t file(new fbstream_t(filename, std::ios_base::binary | mode));
 	if (!file->fail()) {
 		file->unsetf(std::ios_base::skipws);
-		newindex = InsertFileStreamToVector(std::move(file));
+		newindex = InsertFileStreamToBinVector(std::move(file));
 	}
 	return newindex;
 }
@@ -32,60 +61,122 @@ int _file_bin_open(const os_string_type& filename, std::ios_base::open_mode mode
 unsigned char _file_bin_read_byte(int file)
 {
 	char ret(0);
-	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
-		ret = OpenFilestreams()[file]->get();
+	if (isValidBinIndex(file) && OpenFileBinstreams()[file]->good()) {
+		ret = OpenFileBinstreams()[file]->get();
 		return reinterpret_cast<unsigned char&>(ret);
 	}
 	return 0;
 }
 void _file_bin_write_byte(int file, unsigned char byte) {
 	char b(reinterpret_cast<char&>(byte));
-	OpenFilestreams()[file]->put(b);
+	OpenFileBinstreams()[file]->put(b);
 }
 unsigned short _file_bin_read_word(int file)
 {
 	unsigned short ret;
-	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
-		OpenFilestreams()[file]->read(reinterpret_cast<char *>(&ret), sizeof(ret));
+	if (isValidBinIndex(file) && OpenFileBinstreams()[file]->good()) {
+		OpenFileBinstreams()[file]->read(reinterpret_cast<char *>(&ret), sizeof(ret));
 		return ret;
 	}
 	return 0;
 }
 void _file_bin_write_word(int file,unsigned short input) {
-	OpenFilestreams()[file]->write(reinterpret_cast<const char *>(&input), sizeof(input));
+	if (isValidBinIndex(file) && OpenFileBinstreams()[file]->good()) {
+		OpenFileBinstreams()[file]->write(reinterpret_cast<const char *>(&input), sizeof(input));
+	}
 }
 unsigned long _file_bin_read_dword(int file)
 {
 	unsigned long  ret;
-	if (isValidIndex(file) && OpenFilestreams()[file]->good()) {
-		OpenFilestreams()[file]->read(reinterpret_cast<char *>(&ret), sizeof(ret));
+	if (isValidBinIndex(file) && OpenFileBinstreams()[file]->good()) {
+		OpenFileBinstreams()[file]->read(reinterpret_cast<char *>(&ret), sizeof(ret));
 		return ret;
 	}
 	return 0;
 }
 void _file_bin_write_dword(int file, unsigned long input) {
-	OpenFilestreams()[file]->write(reinterpret_cast<const char *>(&input), sizeof(input));
+	if (isValidBinIndex(file) && OpenFileBinstreams()[file]->good()) {
+		OpenFileBinstreams()[file]->write(reinterpret_cast<const char *>(&input), sizeof(input));
+	}
 }
 
-auto _file_bin_size(int file) -> decltype(OpenFilestreams()[file]->tellg())
+auto _file_bin_size(int file) -> decltype(OpenFileBinstreams()[file]->tellg())
 {
-	auto old(OpenFilestreams()[file]->tellg());
-	OpenFilestreams()[file]->seekg(0, std::ifstream::end);
-	auto ret(OpenFilestreams()[file]->tellg());
-	OpenFilestreams()[file]->seekg(old);
-	return ret;
+	if (isValidBinIndex(file)) {
+		auto old(OpenFileBinstreams()[file]->tellg());
+		OpenFileBinstreams()[file]->seekg(0, std::ifstream::end);
+		auto ret(OpenFileBinstreams()[file]->tellg());
+		OpenFileBinstreams()[file]->seekg(old);
+		return ret;
+	}
+	return 0;
 }
-//auto _file_bin_read_position(int file) -> decltype(OpenFilestreams()[file]->tellg())
-//{
-//	return OpenFilestreams()[file]->tellg();
-//}
-auto _file_bin_position(int file) -> decltype(OpenFilestreams()[file]->tellg())
+auto _file_bin_position(int file) -> decltype(OpenFileBinstreams()[file]->tellg())
 {
-	return OpenFilestreams()[file]->tellp();
+	if (isValidBinIndex(file)) {
+		return OpenFileBinstreams()[file]->tellp();
+	}
+	return 0;
 }
 void _file_bin_seek(int file, int offset, std::ios_base::seekdir dir)
 {
-	OpenFilestreams()[file]->seekp(offset, dir);
+	if (isValidBinIndex(file)) {
+		OpenFileBinstreams()[file]->seekp(offset, dir);
+	}
+}
+bool _file_bin_eof(int file)
+{
+	if (isValidBinIndex(file)) {
+		return OpenFileBinstreams()[file]->eof();
+	}
+	return false;
+}
+bool _file_bin_eoln(int file)
+{
+	if (isValidBinIndex(file)) {
+		return OpenFileBinstreams()[file]->eoln();
+	}
+	return false;
+}
+bool _file_bin_good(int file)
+{
+	if (isValidBinIndex(file)) {
+		return OpenFileBinstreams()[file]->good();
+	}
+	return false;
+}
+bool _file_bin_fail(int file)
+{
+	if (isValidBinIndex(file)) {
+		return OpenFileBinstreams()[file]->fail();
+	}
+	return false;
+}
+bool _file_bin_bad(int file)
+{
+	if (isValidBinIndex(file)) {
+		return OpenFileBinstreams()[file]->bad();
+	}
+	return false;
+}
+void _file_bin_clear_fail(int file)
+{
+	if (isValidBinIndex(file)) {
+		OpenFileBinstreams()[file]->clear_fail();
+	}
+}
+void _file_bin_clear_bad(int file)
+{
+	if (isValidBinIndex(file)) {
+		OpenFileBinstreams()[file]->clear_bad();
+	}
+}
+void _file_bin_close(int file)
+{
+	if (isValidBinIndex(file)) {
+		OpenFileBinstreams()[file].reset(nullptr);
+		OpenBinSpots().push_back(file);
+	}
 }
 
 GMEXPORT double file_bin_open(const char* filename, double mode)
@@ -138,10 +229,6 @@ GMEXPORT double file_bin_size(double file)
 {
 	return static_cast<double>(_file_bin_size(static_cast<int>(file)));
 }
-//GMEXPORT double file_bin_read_position(double file)
-//{
-//	return _file_bin_read_position(static_cast<int>(file));
-//}
 GMEXPORT double file_bin_position(double file)
 {
 	return static_cast<double>(_file_bin_position(static_cast<int>(file)));
@@ -167,4 +254,39 @@ GMEXPORT double file_bin_seek_relative(double file, double offset,double relativ
 	}
 	_file_bin_seek(static_cast<int>(file), static_cast<int>(offset));
 	return 0;
+}
+GMEXPORT double file_bin_eof(double file)
+{
+	return _file_bin_eof(static_cast<int>(file));
+}
+GMEXPORT double file_bin_eoln(double file)
+{
+	return _file_bin_eoln(static_cast<int>(file));
+}
+GMEXPORT double file_bin_good(double file)
+{
+	return _file_bin_good(static_cast<int>(file));
+}
+GMEXPORT double file_bin_fail(double file)
+{
+	return _file_bin_fail(static_cast<int>(file));
+}
+GMEXPORT double file_bin_bad(double file)
+{
+	return _file_bin_bad(static_cast<int>(file));
+}
+GMEXPORT double file_bin_clear_fail(double file)
+{
+	_file_bin_clear_fail(static_cast<int>(file));
+	return 0;
+}
+GMEXPORT double file_bin_clear_bad(double file)
+{
+	_file_bin_clear_bad(static_cast<int>(file));
+	return 0;
+}
+GMEXPORT double file_bin_close(double file)
+{
+	_file_bin_close(static_cast<int>(file));
+	return 0.0;
 }

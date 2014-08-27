@@ -131,13 +131,6 @@ bool _file_bin_eof(int file)
 	}
 	return false;
 }
-bool _file_bin_eoln(int file)
-{
-	if (isValidBinIndex(file)) {
-		return OpenFileBinstreams()[file]->eoln();
-	}
-	return false;
-}
 bool _file_bin_good(int file)
 {
 	if (isValidBinIndex(file)) {
@@ -162,13 +155,13 @@ bool _file_bin_bad(int file)
 void _file_bin_clear_fail(int file)
 {
 	if (isValidBinIndex(file)) {
-		OpenFileBinstreams()[file]->clear_fail();
+		OpenFileBinstreams()[file]->clear(OpenFileBinstreams()[file]->rdstate() & ~std::ios::failbit);
 	}
 }
 void _file_bin_clear_bad(int file)
 {
 	if (isValidBinIndex(file)) {
-		OpenFileBinstreams()[file]->clear_bad();
+		OpenFileBinstreams()[file]->clear(OpenFileBinstreams()[file]->rdstate() & ~std::ios::badbit);
 	}
 }
 void _file_bin_close(int file)
@@ -258,10 +251,6 @@ GMEXPORT double file_bin_seek_relative(double file, double offset,double relativ
 GMEXPORT double file_bin_eof(double file)
 {
 	return _file_bin_eof(static_cast<int>(file));
-}
-GMEXPORT double file_bin_eoln(double file)
-{
-	return _file_bin_eoln(static_cast<int>(file));
 }
 GMEXPORT double file_bin_good(double file)
 {

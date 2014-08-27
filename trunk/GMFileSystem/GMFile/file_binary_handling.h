@@ -28,7 +28,6 @@ auto _file_bin_position(int file) -> decltype(OpenFileBinstreams()[file]->tellg(
 void _file_bin_seek(int file, int offset, std::ios_base::seekdir dir = std::ios_base::beg);
 
 bool _file_bin_eof(int file);
-bool _file_bin_eoln(int file);
 bool _file_bin_good(int file);
 bool _file_bin_fail(int file);
 bool _file_bin_bad(int file);
@@ -58,7 +57,6 @@ GMEXPORT double file_bin_seek_relative(double file, double offset, double relati
 
 
 GMEXPORT double file_bin_eof(double file);
-GMEXPORT double file_bin_eoln(double file);
 GMEXPORT double file_bin_good(double file);
 GMEXPORT double file_bin_fail(double file);
 GMEXPORT double file_bin_bad(double file);

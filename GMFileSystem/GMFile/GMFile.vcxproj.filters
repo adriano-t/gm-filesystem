@@ -33,6 +33,9 @@
     <ClCompile Include="possix_file_find.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="filestream_organizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="standard_functions.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="possix_file_find.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="filestream_organizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
